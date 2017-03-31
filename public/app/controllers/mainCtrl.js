@@ -138,6 +138,7 @@ angular.module('mainController', ['authServices', 'userServices'])
     else{
       app.isLoggedIn = false;
       app.username = "";
+      app.useremail = "";
       app.loadme = true;
     }
 
@@ -154,11 +155,6 @@ angular.module('mainController', ['authServices', 'userServices'])
     $window.location = $window.location.protocol + '//' + $window.location.host + '/auth/facebook'; 
   };
 
-  // prevent twitter login from opening new window
-  this.twitter = function() {
-    app.disabled = true;
-    $window.location = $window.location.protocol + '//' + $window.location.host + '/auth/twitter'; 
-  };
 
   // prevent google login from opening new window
   this.google = function() {
