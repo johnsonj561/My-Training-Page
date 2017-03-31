@@ -30,6 +30,7 @@
     <script src="app/controllers/mainCtrl.js"></script>
     <script src="app/controllers/emailCtrl.js"></script>
     <script src="app/controllers/managementCtrl.js"></script>
+    <script src="app/controllers/menuCtrl.js"></script>
 
     <!-- Angular Services -->
     <script src="app/services/userServices.js"></script>
@@ -70,6 +71,7 @@
           <li><a class="nav-link" ng-show="main.isLoggedIn" href="/logout" ng-click="main.logout()">Logout</a></li>
           <li><a class="nav-link" ng-show="!main.isLoggedIn" href="/register">Register</a></li>
           <li><a class="nav-link" ng-show="main.isLoggedIn && main.authorized" href="/management">Management</a></li>
+          <li><a class="nav-link" ng-show="main.isLoggedIn" href="/menu">Menu</a></li>
           <li><a class="nav-link" ng-show="!main.isLoggedIn" href="/">Login</a></li>
         </ul>
       </div>
@@ -117,6 +119,14 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery-3.1.1.js"></script>
     <script src="assets/js/bootstrap.js"></script>
+    <!-- jquery to de-activate the navbar-toggle after a link has been --> 
+    <script>
+      $(".nav-link").on("click", function() {
+        if($("#btn-nav-toggle").attr("aria-expanded") == "true"){
+          $("#btn-nav-toggle").trigger("click");
+        }
+      });
+    </script>
   </body>
 
 </html>
