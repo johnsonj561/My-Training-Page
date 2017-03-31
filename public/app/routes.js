@@ -91,8 +91,7 @@ var app = angular.module('appRoutes', ['ngRoute'])
   .when('/resend', {
     templateUrl: 'app/views/pages/users/activation/resend.html',
     controller: 'resendCtrl',
-    controllerAs: 'resend',
-    authenticated: false
+    controllerAs: 'resend'
   })
 
   .when('/resetusername', {
@@ -138,6 +137,17 @@ var app = angular.module('appRoutes', ['ngRoute'])
     controllerAs: 'management',
     authenticated: true,
     permission: ['admin', 'moderator']
+  })
+  
+  /*
+  * User menu displays available functionality to user
+  * Should be default view when user is logged in
+  */
+  .when('/menu', {
+    templateUrl: 'app/views/pages/users/menu/menu.html',
+    controller: 'menuCtrl',
+    controllerAs: 'menu',
+    authenticated: true
   })
   
   
