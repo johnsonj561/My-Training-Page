@@ -123,7 +123,7 @@ angular.module('userControllers', ['userServices'])
   }
   else {
     Auth.facebook($routeParams.token);
-    $location.path('/');
+    $location.path('/menu');
   }
 
 })
@@ -143,7 +143,7 @@ angular.module('userControllers', ['userServices'])
   }
   else {
     Auth.facebook($routeParams.token);
-    $location.path('/');
+    $location.path('/menu');
   }
 
 });
