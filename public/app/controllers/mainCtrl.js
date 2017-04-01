@@ -123,7 +123,7 @@ angular.module('mainController', ['authServices', 'userServices'])
         app.useremail = data.data.email;
 
         User.getPermission().then(function(data) {
-          if(data.data.permission === 'admin' || data.data.permission === 'moderator') {
+          if(data.data.permission === 'admin') {
             app.authorized = true;
             app.loadme = true;
           }
@@ -180,8 +180,8 @@ angular.module('mainController', ['authServices', 'userServices'])
         $timeout(function() {
           app.loginData = {};
           app.successMsg = false;
-          console.log('log in success, redirecting to profile');
-          $location.path('/profile');
+          console.log('log in success, redirecting to main menu');
+          $location.path('/menu');
           app.checkSession();
         }, 1000);
       }
