@@ -120,7 +120,7 @@ var app = angular.module('appRoutes', ['ngRoute'])
     controller: 'managementCtrl',
     controllerAs: 'management',
     authenticated: true,
-    permission: ['admin', 'moderator']
+    permission: ['admin']
   })
 
     .when('/edit/:id', {
@@ -128,7 +128,7 @@ var app = angular.module('appRoutes', ['ngRoute'])
     controller: 'editCtrl',
     controllerAs: 'edit',
     authenticated: true,
-    permission: ['admin', 'moderator']
+    permission: ['admin']
   })
   
   .when('/search', {
@@ -136,7 +136,7 @@ var app = angular.module('appRoutes', ['ngRoute'])
     controller: 'managementCtrl',
     controllerAs: 'management',
     authenticated: true,
-    permission: ['admin', 'moderator']
+    permission:['admin']
   })
   
   /*
