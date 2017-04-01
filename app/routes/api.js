@@ -461,7 +461,7 @@ module.exports = function(router) {
           res.json({ success: false, message: 'No user fond' });  
         }
         else{
-          if(mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+          if(mainUser.permission === 'admin') {
             if(!users) {
               res.json({ message: false, message: 'Users not found' });
             }
@@ -510,7 +510,7 @@ module.exports = function(router) {
         res.json({ success: false, message: 'No user found' });  
       }
       else {
-        if(mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+        if(mainUser.permission === 'admin') {
           User.findOne({ _id: editUser }, function(err, user) {
             if(err) throw err;
             if(!user) {
@@ -546,7 +546,7 @@ module.exports = function(router) {
         // Check if a change to name was requested
         if (newName) {
           // Check if person making changes has appropriate access
-          if (mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+          if (mainUser.permission === 'admin') {
             // Look for user in database
             User.findOne({ _id: editUser }, function(err, user) {
               if (err) throw err; // Throw error if cannot connect
@@ -573,7 +573,7 @@ module.exports = function(router) {
         // Check if a change to username was requested
         if (newUsername) {
           // Check if person making changes has appropriate access
-          if (mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+          if (mainUser.permission === 'admin') {
             // Look for user in database
             User.findOne({ _id: editUser }, function(err, user) {
               if (err) throw err; // Throw error if cannot connect
@@ -600,7 +600,7 @@ module.exports = function(router) {
         // Check if change to e-mail was requested
         if (newEmail) {
           // Check if person making changes has appropriate access
-          if (mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+          if (mainUser.permission === 'admin') {
             // Look for user that needs to be editted
             User.findOne({ _id: editUser }, function(err, user) {
               if (err) throw err; // Throw error if cannot connect
@@ -627,7 +627,7 @@ module.exports = function(router) {
         // Check if a change to permission was requested
         if (newPermission) {
           // Check if user making changes has appropriate access
-          if (mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+          if (mainUser.permission === 'admin') {
             // Look for user to edit in database
             User.findOne({ _id: editUser }, function(err, user) {
               if (err) throw err; // Throw error if cannot connect
@@ -655,36 +655,6 @@ module.exports = function(router) {
                     }
                   } else {
                     user.permission = newPermission; // Assign new permission to user
-                    // Save changes
-                    user.save(function(err) {
-                      if (err) {
-                        console.log(err); // Log error to console
-                      } else {
-                        res.json({ success: true, message: 'Permissions have been updated!' }); // Return success
-                      }
-                    });
-                  }
-                }
-                // Check if attempting to set the 'moderator' permission
-                if (newPermission === 'moderator') {
-                  // Check if the current permission is 'admin'
-                  if (user.permission === 'admin') {
-                    // Check if user making changes has access
-                    if (mainUser.permission !== 'admin') {
-                      res.json({ success: false, message: 'Insufficient Permissions' }); // Return error
-                    } else {
-                      user.permission = newPermission; // Assign new permission
-                      // Save changes
-                      user.save(function(err) {
-                        if (err) {
-                          console.log(err); // Log error to console
-                        } else {
-                          res.json({ success: true, message: 'Permissions have been updated!' }); // Return success
-                        }
-                      });
-                    }
-                  } else {
-                    user.permission = newPermission; // Assign new permssion
                     // Save changes
                     user.save(function(err) {
                       if (err) {

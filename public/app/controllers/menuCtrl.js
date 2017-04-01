@@ -4,16 +4,12 @@ angular.module('menuController', ['userServices', 'authServices'])
   .controller('menuCtrl', function(User, Auth) {
 
   app = this;
-  app.displayProgressBar = false;
-  
-  /*
-  * Verify that user is logged in
-  */
-  app.isLoggedIn = Auth.isLoggedIn();
-  
+  app.displayProgressBar = true;
+
+
+
   /*
   * Get permission of current user
-  * If current user is student, display progress bar
   */
   User.getPermission().then(function(data) {
     if(data.data.success) {
@@ -26,7 +22,24 @@ angular.module('menuController', ['userServices', 'authServices'])
       app.permission = false;
     }
   });
+
+  /*
+  * Verify that user is logged in
+  */
+  app.isLoggedIn = function() {
+    return Auth.isLoggedIn();
+  }
   
+  /*
+  * Return true if current user is admin
+  */
+  app.isAdmin = function() {
+    if(app.permission === 'admin') {
+      return true;
+    }
+    return false;
+  }
+
 
 
 });
