@@ -49,7 +49,6 @@
                   id="btn-nav-toggle" data-target="#bs-example-navbar-collapse-1">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
             <span class="icon-bar"></span> 
             <span class="icon-bar"></span>
           </button>
@@ -67,10 +66,8 @@
       </div>
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
-          <li><a class="nav-link" ng-show="main.isLoggedIn" href="/profile">Hello {{ main.username }} </a></li>
           <li><a class="nav-link" ng-show="main.isLoggedIn" href="/logout" ng-click="main.logout()">Logout</a></li>
           <li><a class="nav-link" ng-show="!main.isLoggedIn" href="/register">Register</a></li>
-          <li><a class="nav-link" ng-show="main.isLoggedIn && main.authorized" href="/management">Management</a></li>
           <li><a class="nav-link" ng-show="main.isLoggedIn" href="/menu">Menu</a></li>
           <li><a class="nav-link" ng-show="!main.isLoggedIn" href="/">Login</a></li>
         </ul>
