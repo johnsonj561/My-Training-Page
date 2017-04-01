@@ -12,7 +12,7 @@ module.exports = function(app, passport){
 
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: true, cookies: { secure: false }}));
+  app.use(session({ secret: 'xxx', resave: false, saveUninitialized: true, cookies: { secure: false }}));
 
   passport.serializeUser(function(user, done) {
     // if user has activated account, assign token
@@ -61,7 +61,7 @@ module.exports = function(app, passport){
   //   credentials (in this case, an accessToken, refreshToken, and Google
   //   profile), and invoke a callback with a user object.
   passport.use(new GoogleStrategy({
-    clientID: 'xxx-xxx.apps.googleusercontent.com',
+    clientID: '217331476193-xxx.apps.googleusercontent.com',
     clientSecret: 'xxx',
     callbackURL: "http://localhost:3000/auth/google/callback"
   },
