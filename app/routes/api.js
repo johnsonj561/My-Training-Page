@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var TrainingModule = require('../models/trainingmodule');
 var jwt = require('jsonwebtoken');    // json web token for storing session - https://github.com/auth0/node-jsonwebtoken
 var secret = 'xxx';
 var nodemailer = require('nodemailer');
@@ -104,6 +105,75 @@ module.exports = function(router) {
 
 
   /*
+  * UPDATE USER PROFILE
+  */
+  router.post('/updateuser', function(req, res) {
+    console.log('in server');
+    console.log(req.body);
+    console.log('out server');
+
+    var editUser = req.body._id; 
+
+    // Look for user that needs to be editted
+    User.findOne({ _id: editUser }, function(err, user) {
+      if (err) throw err; // Throw error if cannot connect
+      // Check if logged in user is in database
+      if (!user) {
+        res.json({ success: false, message: 'No user found' }); // Return error
+      } 
+      else {
+        // update user profile data
+        user.email = req.body.email;
+        user.name = req.body.name;
+        if(req.body.password) {
+          console.log('password provided');
+          user.password = req.body.password;
+        }
+        user.save(function(err) {
+          if (err) {
+            console.log(err); // Log error to console
+          } else {
+            res.json({ success: true, message: 'Profile has been updated' });
+          }
+        });
+      }
+    });
+  });
+
+
+  /*
+  * UPDATE PASSWORD
+  */
+  router.post('/updatepassword', function(req, res) {
+    console.log('in server');
+    console.log(req.body);
+    console.log('out server');
+
+    var editUser = req.body._id;
+
+    User.findOne({ _id: editUser }, function(err, user) {
+      if(err) throw err;
+
+      if(!user) {
+        res.json({ success: false, message: 'No user found' });
+      }
+      else {
+        user.password = req.body.password;
+        user.save(function(err) {
+          if(err) {
+            console.log('error saving user in updatepassword route');
+            throw err;
+          }
+          else {
+            res.json({ success: true, message: 'Your password has been udpated' });
+          }
+        });
+      }
+    });
+  });
+
+
+  /*
   * LOGIN ROUTE
   * validates login info
   * http://localhost:3000/api/authenticate
@@ -122,7 +192,7 @@ module.exports = function(router) {
           var validPassword = user.comparePassword(req.body.password);
         }
         else {
-          res.json({ message: false, message: 'No password provided' });  
+          res.json({ success: false, message: 'No password provided' });  
         }
         if(!validPassword) {    // password does not match
           res.json({ success: false, message: 'Could not authenticate password' });
@@ -528,6 +598,19 @@ module.exports = function(router) {
     });
   });
 
+  router.get('/getcurrent', function(req, res) {
+    User.findOne({ username: req.decoded.username }, function(err, user) {
+      if(err) throw err;
+      if(!user) {
+        res.json({ success: false, message: 'No user found' });
+      }
+      else {
+
+        res.json({ success: true, message: 'User found', user: user });
+      }
+    })
+  });
+
 
   // Route to update/edit a user
   router.put('/edit', function(req, res) {
@@ -692,6 +775,27 @@ module.exports = function(router) {
         }
       }
     });
+  });
+
+
+  /*
+  * Get training module from db
+  */
+  router.get('/trainingmodule/:id', function(req, res) {
+
+    TrainingModule.findOne({ _id: req.params.id }, function(err, trainingmodule) {
+      if(err) throw err;
+      if(!trainingmodule) {
+        res.json({ success: false, message: 'No trainingmodule found' });
+      }
+      
+      else {
+        res.json({ success: true, message: 'trainingmodule found', trainingmodule: trainingmodule });
+      }
+    });
+
+
+
   });
 
   return router;
