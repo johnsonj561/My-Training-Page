@@ -36,6 +36,13 @@ var app = angular.module('appRoutes', ['ngRoute'])
     templateUrl: 'app/views/pages/users/profile.html',
     authenticated: true
   })
+  
+  .when('/editprofile', {
+    templateUrl: 'app/views/pages/users/editprofile.html',
+    controller: 'profileCtrl',
+    controllerAs: 'profile',
+    authenticated: true
+  })
 
   .when('/facebook/:token', {
     templateUrl: 'app/views/pages/users/social/social.html',
@@ -147,6 +154,13 @@ var app = angular.module('appRoutes', ['ngRoute'])
     templateUrl: 'app/views/pages/users/menu/menu.html',
     controller: 'menuCtrl',
     controllerAs: 'menu',
+    authenticated: true
+  })
+  
+  .when('/train', {
+    templateUrl: 'app/views/pages/training/train.html',
+    controller: 'trainCtrl',
+    controllerAs: 'training',
     authenticated: true
   })
   
