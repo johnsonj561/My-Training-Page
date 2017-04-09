@@ -1,6 +1,6 @@
 angular.module('userControllers', ['userServices'])
 
-.controller('regCtrl', function($http, $location, $timeout, User, $route, $window) {
+  .controller('regCtrl', function($http, $location, $timeout, User, $route, $window) {
 
   var app = this;
 
@@ -10,7 +10,7 @@ angular.module('userControllers', ['userServices'])
     app.errorMsg = false; // Clear error message each time the user presses submit
     app.successMsg = false; // Clear success message each time user presses submit
     app.disabled = true;
-    
+
     // only process if front end was valid
     if(valid) {
       // Initiate service to save the user into the dabase            
@@ -75,9 +75,123 @@ angular.module('userControllers', ['userServices'])
 })
 
 
+
+/*
+* Edit Controller
+* Provdes functionality for editing personal user profiles
+*/
+  .controller('profileCtrl', function($http, $location, $timeout, User, $route, $window, $scope) {
+
+  var app = this;
+  app.disablePassword = true;
+
+  // initialize data objects to bind to view
+  app.editData = {};
+  app.passwordData = {};
+  
+  // get current user information
+  User.getCurrentUser().then(function(data) {
+    if(data) {
+      app.editData._id = data.data.user._id;
+      app.passwordData._id = data.data.user._id;
+      app.editData.name = data.data.user.name;
+      app.editData.username = data.data.user.username;
+      app.editData.email = data.data.user.email;
+    }
+    else {
+      app.errorMsg = 'An error occurred while retrieving your information. If this problem continues, contact admin for assistance';
+    }
+  });
+
+
+  /*
+  * Update database with new user info
+  */
+  app.updateUser = function(editData, valid) {
+    app.loading = true; // To activate spinning loading icon w/bootstrap
+    app.errorMsg = false; // Clear error message each time the user presses submit
+    app.successMsg = false; // Clear success message each time user presses submit
+    app.disabled = true;
+
+    // if front end was valid and user is defined
+    if(valid) {
+      User.updateUser(app.editData).then(function(data) {
+        // ON SUCCESS
+        if(data.data.success) {
+          app.loading = false; // Once data is retrieved, loading icon should be cleared
+          app.successMsg = data.data.message + '...Redirecting'; // Create Success Message
+          // Redirect to home page after 2000 miliseconds
+          $timeout(function() {
+            $location.path('/menu');
+            $route.reload();
+          }, 2000);
+        }
+        // ON FAILURE
+        else {
+          app.disabled = false;
+          app.loading = false; 
+          app.errorMsg = data.data.message; // Create an error message
+        }
+      });
+    }
+
+    // else front end was invalid
+    else {
+      app.disabled = false;
+      app.loading = false;
+      app.errorMsg = 'Please ensure form is filled out properly.';
+    }
+  }
+
+
+  /*
+  * Update database with new password 
+  */
+  app.updatePassword = function(passwordData, valid) {
+    app.loading = true;
+    app.errorMsg = false;
+    app.successMsg = false;
+    app.disabled = true;
+    console.log('in useCtrl');
+    console.log(passwordData);
+    
+    // if front end was valid and user is defined
+    if(valid) {
+      User.updatePassword(app.passwordData).then(function(data) {
+        // ON SUCCESS
+        if(data.data.success) {
+          app.loading = false; // Once data is retrieved, loading icon should be cleared
+          app.successMsg = data.data.message + '...Redirecting'; // Create Success Message
+          // Redirect to home page after 2000 miliseconds
+          $timeout(function() {
+            $location.path('/menu');
+            $route.reload();
+          }, 2000);
+        }
+        // ON FAILURE
+        else {
+          app.disabled = false;
+          app.loading = false; 
+          app.errorMsg = data.data.message; // Create an error message
+        }
+      });
+    }
+
+    // else front end was invalid
+    else {
+      app.disabled = false;
+      app.loading = false;
+      app.errorMsg = 'Please ensure form is filled out properly.';
+    }
+
+  }
+
+})
+
+
 // custom angular directive
 // https://docs.angularjs.org/guide/directive
-.directive('match', function() {
+  .directive('match', function() {
   return {
     restrict: 'A',
     controller: function($scope) {
@@ -109,7 +223,7 @@ angular.module('userControllers', ['userServices'])
   };
 })
 
-.controller('facebookCtrl', function($routeParams, Auth, $location, $window) {
+  .controller('facebookCtrl', function($routeParams, Auth, $location, $window) {
   var app = this;
   app.errorMsg = false;
   app.disabled = true;
@@ -129,7 +243,7 @@ angular.module('userControllers', ['userServices'])
 })
 
 
-.controller('googleCtrl', function($routeParams, Auth, $location, $window) {
+  .controller('googleCtrl', function($routeParams, Auth, $location, $window) {
   var app = this;
   app.errorMsg = false;
   app.disabled = true;
