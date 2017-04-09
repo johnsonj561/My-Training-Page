@@ -53,14 +53,14 @@ var app = angular.module('appRoutes', ['ngRoute'])
 
 
   .when('/facebookerror', {
-    templateUrl: 'app/views/pages/users/login.html',
+    templateUrl: 'app/views/pages/home.html',
     controller: 'facebookCtrl',
     controllerAs: 'facebook',
     authenticated: false
   })
 
   .when('/facebook/inactive/error', {
-    templateUrl: 'app/views/pages/users/login.html',
+    templateUrl: 'app/views/pages/home.html',
     controller: 'facebookCtrl',
     controllerAs: 'facebook',
     authenticated: false
@@ -74,7 +74,7 @@ var app = angular.module('appRoutes', ['ngRoute'])
   })
 
   .when('/googleerror', {
-    templateUrl: 'app/views/pages/users/login.html',
+    templateUrl: 'app/views/pages/home.html',
     controller: 'googleCtrl',
     controllerAs: 'google',
     authenticated: false
@@ -82,7 +82,7 @@ var app = angular.module('appRoutes', ['ngRoute'])
 
 
   .when('/google/inactive/error', {
-    templateUrl: 'app/views/pages/users/login.html',
+    templateUrl: 'app/views/pages/home.html',
     controller: 'googleCtrl',
     controllerAs: 'google',
     authenticated: false
