@@ -1,0 +1,41 @@
+{
+  name: "Training Module 1",
+  author:[
+    {
+      _id: ObjectId("58db0ec4127e7e1728aa5da4"),
+      name: "Justin Johnson"
+    }
+  ],
+  last_edit: "4/8/2017",
+  components: [
+    {
+      page: 1,
+      pageType: "text",
+      title: "Page 1 Title",
+      body: "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Nulla quis lorem ut libero malesuada feugiat. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.",
+      media: false,
+      question: false,
+    },
+    {
+      page: 2,
+      pageType: "text",
+      title: "Page 2 Title",
+      body: "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Nulla quis lorem ut libero malesuada feugiat. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.",
+      media: false,
+      question: false,
+    },
+    {
+      page: 3,
+      pageType: "text",
+      title: "Page 3 Title",
+      body: "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Nulla quis lorem ut libero malesuada feugiat. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.",
+      media: false,
+      question: false,
+    }
+  ],
+  assignedCount: 0,
+  completedCount: 0,
+  totalScores: 0,
+  lowScore: 0,
+  highScore: 0
+}
