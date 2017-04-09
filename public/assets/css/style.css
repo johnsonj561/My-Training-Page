@@ -323,16 +323,65 @@ div.menu-description {
 
 /* REGISTRATION VIEW
 ====================== */
-form.regForm>div {
+form.regForm>div, form.profileForm>div, form.passwordForm>div {
   margin-bottom: 10px;
 }
 
-
-/* REGISTRATION VIEW
-====================== */
 .showmore{
   display: inline;
 }
+
+/* EDIT PROFILE VIEW
+====================== */
+
+.login-form > legend {
+  display: block;
+  width: auto;
+  padding: 0;
+  margin-bottom: 0px;
+  font-size: 21px;
+  line-height: inherit;
+  color: #333;
+  border: none;
+  background-color: white;
+}
+
+
+
+
+
+
+/* TRAINING MODULE VIEWS
+====================== */
+.training-body > p {
+  padding: 25px;
+}
+.training-footer > .pull-left {
+  margin-left: 25px;
+}
+
+.training-footer > .pull-right {
+  margin-right: 25px;
+}
+
+.training-footer > span > a:hover{
+  color: #eb8022;
+  -webkit-transition: all 500ms linear;
+  -ms-transition: all 500ms linear;
+  transition: all 500ms linear;
+  text-decoration: none;
+}
+
+.training-footer > span > a{
+  font-size: 18px;
+  -webkit-transition: all 500ms linear;
+  -ms-transition: all 500ms linear;
+  transition: all 500ms linear;
+  text-decoration: none;
+}
+
+
+
 
 
 /* LOADING ICON
