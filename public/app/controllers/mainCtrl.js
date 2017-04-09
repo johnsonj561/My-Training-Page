@@ -25,10 +25,7 @@ angular.module('mainController', ['authServices', 'userServices'])
 
           var expireTime = self.parseJwt(token);
           var timeStamp = Math.floor(Date.now() /1000);
-          console.log(expireTime.exp);
-          console.log(timeStamp);
           var timeCheck = expireTime.exp - timeStamp;
-          console.log(timeCheck);
           if(timeCheck <= SESSION_EXPIRE_TIME) {
             showModal(TOKEN_EXPIRED_MODAL);
             $interval.cancel(interval);
@@ -109,7 +106,9 @@ angular.module('mainController', ['authServices', 'userServices'])
   // this will prevent the angular {{ }} displaying during page loading
   app.loadme = false;
 
-  // invoked whenever new route is loaded
+  /*
+  * Invoked whenever route changes
+  */
   $rootScope.$on('$routeChangeStart', function() {
 
     if(!app.checkingSession) {
@@ -164,6 +163,9 @@ angular.module('mainController', ['authServices', 'userServices'])
 
 
 
+  /*
+  * User Login
+  */
   this.doLogin = function(loginData) {
     app.loading = true;
     app.errorMsg = false;
