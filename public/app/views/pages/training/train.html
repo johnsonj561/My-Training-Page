@@ -10,26 +10,69 @@
 <div class="panel-group">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h3 class="panel-title">Page {{ training.component.page }}</h3>
+      <h3 class="panel-title">Page {{ training.page + 1}} <span ng-show="training.component.title">: {{ training.component.title }}</span></h3>
     </div>
     <div class="panel-body">
       <div class="row training-body">
 
-        <p>{{ training.component.body }}</p>
+        <!-- Text Training Component -->
+        <div class="text-component" ng-show="training.component.pageType == 'text'">
+          <h3 class="text-center">{{ training.component.title }}</h3>
+          <p>{{ training.component.body }}</p>
+        </div>
+
+        <!-- Audio Training Component -->
+        <div class="audio-component" ng-show="training.component.pageType == 'audio'">
+          <h3 class="text-center">{{ training.component.title }}</h3>
+          <p class="media-instructions text-center">Please listen to the entire audio file before proceeding</p>
+          <div class="text-center"><audio ng-src="{{ training.component.source }}" audioplayer controls></audio></div>
+          <p> {{ training.component.description }} </p>
+        </div>
+
+        <!-- Video Training Component -->
+        <div class="video-component" ng-show="training.component.pageType == 'video'">
+          <h3 class="text-center">{{ training.component.title }}</h3>
+          <p class="media-instructions text-center">Please watch the entire video before proceeding</p>
+          <div class="text-center"><video ng-src="{{ training.component.source }}" controls></video></div>
+          <p> {{ training.component.description }} </p>
+        </div>
+
+        <!-- True/False Question -->
+        <div class="true-false-component" ng-show="training.component.pageType == 'true-false'">
+          <h3 class="text-center">{{ training.component.title }}</h3>
+        </div>
+
+        <!-- Multiple Choice Question -->
+        <div class="multiple-choice-component" ng-show="training.component.pageType == 'multiple-choice'">
+          <h3 class="text-center">{{ training.component.title }}</h3>
+        </div>
+
+        <!-- Fill In Blank Question -->
+        <div class="fill-blank-component" ng-show="training.component.pageType == 'fill-blank'">
+          <h3 class="text-center">{{ training.component.title }}</h3>
+        </div>
+
+        <a class="btn btn-primary" ng-show="training.component.pageType == 'true-false' || training.component.pageType == 'multiple-choice' ||
+                                            training.component.pageType == 'fill-blank'">Submit Answer</a>
+
 
       </div>
 
     </div>
+
+
     <div class="panel-footer">
       <div class="row training-footer">
-        <span ng-show="training.component.page > 1" ng-click="training.previousPage()" class="pull-left">
+        <span ng-show="training.page > 0" ng-click="training.previousPage()" class="pull-left">
           <a href="#"><i class="fa fa-caret-square-o-left fa-2x" aria-hidden="true"></i> Prev</a>
         </span>
-        <span ng-show="training.component.page < training.components.length" ng-click="training.nextPage()" class="pull-right">
+        <span ng-show="training.page < training.components.length - 1" ng-click="training.nextPage()" class="pull-right">
           <a href="#">Next <i class="fa fa-caret-square-o-right fa-2x" aria-hidden="true"></i></a>
         </span>
       </div>
     </div>
+
+
   </div>
 </div>
 
