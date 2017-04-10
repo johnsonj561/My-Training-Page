@@ -351,9 +351,9 @@ form.regForm>div, form.profileForm>div, form.passwordForm>div {
 
 
 
-/* TRAINING MODULE VIEWS
+/* TRAINING MODULE TEXT VIEWS
 ====================== */
-.training-body > p {
+.training-body > div > p {
   padding: 25px;
 }
 .training-footer > .pull-left {
@@ -380,6 +380,25 @@ form.regForm>div, form.profileForm>div, form.passwordForm>div {
   text-decoration: none;
 }
 
+/* TRAINING MODULE MEDIA VIEWS
+====================== */
+audio {
+  width: 75%;
+  max-width: 800px;
+}
+
+video {
+  width: 90%;
+  max-width: 800px;
+}
+
+.media-instructions {
+  font-style: italic;
+}
+
+
+/* TRAINING MODULE QUIZ VIEWS
+====================== */
 
 
 
