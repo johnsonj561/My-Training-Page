@@ -4,7 +4,7 @@ angular.module('trainController', ['trainingServices'])
 
   app = this;  
 
-  
+
   /*
   * Load Media
   * Checks component for media type and loads into source
@@ -20,11 +20,64 @@ angular.module('trainController', ['trainingServices'])
     }
   }
 
+  /*
+  * Is Media returns true if component contains video/audio sources
+  */
+  app.isMedia = function(component) {
+    if(component.pageType == 'video' || component.pageType == 'audio') {
+      return true;
+    }
+    return false;
+  }
+
+  /* 
+  * Is Question returns true if component contains true-false or multiple-choice values
+  */
+  app.isQuestion = function(component) {
+    if(component.pageType == 'true-false' || component.pageType == 'multiple-choice') {
+      return true;
+    }
+    return false;
+  }
+
+
+  /*
+  * Grade Components
+  * Traverses all components and checks user's submissions
+  * Returns Number grade
+  */
+  app.gradeComponents = function(components) { 
+
+    // make sure the last page's question has been saved before calculating
+    if(app.isQuestion(app.component)) {
+      // if a new submission was made
+      if(app.submission !== app.component.submission) {
+        app.component.submission = app.submission;
+      }
+    }
+
+    var count = 0;
+    var correct = 0;
+    for(var i = 0; i < components.length; i++) {
+      // if the component is a question, process grade
+      if(app.isQuestion(components[i])) {
+        count++;
+        console.log('solution: ' + components[i].solution);
+        console.log('submission: ' + components[i].submission);
+        if(components[i].solution === components[i].submission) {
+          correct++;
+        }
+      }
+    }
+    alert( (correct/count)*100 + '%' );
+  }
+
+
   // get list of training modules registered to current user
   // display in drop down menu for selection ?
   // when selected, submit the training module _id to server and return the training module
 
-  var training_id =  '58ead365f026bb6d79240594';
+  var training_id =  '58ec3ec3c5f7b7846ebc27c9';
 
   app.component = {};
 
@@ -47,6 +100,11 @@ angular.module('trainController', ['trainingServices'])
       // get the first training component from the training module
       app.component = data.data.trainingmodule.components[app.page];
 
+      // if training component is a question, hide the next button
+      if(app.isQuestion(app.component)) {
+        app.hideNext = true;
+      }
+
     }
     // if error occurs, render error message and re-direct to menu
     else {
@@ -61,18 +119,53 @@ angular.module('trainController', ['trainingServices'])
 
 
   /*
-  * Next Page function incrememnts app.page
+  * Next Page
+  * Stores current page data
+  * Retrieves next page and pre-processes data for rendering
   */
-  this.nextPage = function() {
+  this.nextPage = function($scope) {
     // if components are defined
     if(app.components) {
       if(app.page < app.components.length) {
+
+        // if current component is a question
+        if(app.isQuestion(app.component)) {
+          // if a new submission was made
+          if(app.submission !== app.component.submission) {
+            console.log('before changing page, storing: ' + app.submission);
+            app.component.submission = app.submission;
+          }
+          else {
+            console.log('no change was made, no new value to store');
+          }
+
+          // setting app.submission to undefined before getting next page
+          app.submission = undefined;
+        }
+
         // get next component from components array
         app.page += 1;
         app.component = app.components[app.page];
-        console.log('page incremented to ' + app.page);
-        // check for media file and assign to scope
-        app.loadMedia(app.component);
+        app.hideNext = false;
+
+        // check for media file and load source
+        if(app.isMedia(app.component)) {
+          app.loadMedia(app.component);
+        }
+
+        // check if questions was answered once already
+        // restore previous value if true
+        if(app.isQuestion(app.component)) {
+          // if a submission is defined from previous view, restore it
+          if(app.component.submission !== undefined) {
+            console.log('restoring value from memory: ' + app.component.submission);
+            app.submission = app.component.submission;
+          }
+          // else no answer exists, hide next button
+          else {
+            app.hideNext = true;
+          }
+        }
       }
     }
     // else page is not defined we have an error
@@ -81,6 +174,7 @@ angular.module('trainController', ['trainingServices'])
     }
   }
 
+
   /*
   * Previous Page function decrements app.page
   */
@@ -88,12 +182,46 @@ angular.module('trainController', ['trainingServices'])
     // if components are defined
     if(app.components) {
       if(app.page > 0) {
-        app.page -= 1;
+
+        // if current component is a question
+        if(app.isQuestion(app.component)) {
+          // if a new submission was given
+          if(app.submission !== app.component.submission) {
+            console.log('before changing page, storing: ' + app.submission);
+            app.component.submission = app.submission;
+          }
+          // else if no new submission but an old answer exists
+          else {
+            console.log('no change was made, no new value to store');
+          }
+          // reset submission model before getting next component
+          app.submission = undefined;
+        }
+
         // get previous component from components array
+        app.page -= 1;
         app.component = app.components[app.page];
-        console.log('page decremented to ' + app.page);
-        // check for media file and assign to scope
-        app.loadMedia(app.component);
+        app.hideNext = false;
+
+        // check for media file and load source
+        if(app.isMedia(app.component)) {
+          app.loadMedia(app.component);
+        }
+
+        // check if questions was answered once already
+        // restore previous value if true
+        if(app.isQuestion(app.component)) {
+          // if a submission is defined from previous view, restore it
+          if(app.component.submission !== undefined) {
+            console.log('restoring value from memory: ' + app.component.submission);
+            app.submission = app.component.submission;
+          }
+          // else no answer exists, hide next button
+          else {
+            app.hideNext = true;
+          }
+
+        }
       }
     }
     // else page is not defined we have an error
