@@ -1,3 +1,19 @@
+/*
+
+var TrainingComponent = new Schema({
+  pageType : { type: String, required: true },
+  title: { type: String, required: false },
+  body: { type: String, required: false },
+  video: { type: String, required: false },
+  audio: { type: String, required: false },
+  description: { type: String, required: false },
+  question: { type: String, required: false },
+  answer: { type: Number, required: false }
+});
+
+*/
+
+
 {
   name: "Training Module 1",
   author:[
@@ -10,20 +26,43 @@
   components: [
     {
       pageType: "text",
-      title: "Page 1 Title",
+      title: "Title 1",
       body: "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Nulla quis lorem ut libero malesuada feugiat. Pellentesque in ipsum id orci porta dapibus. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.",
     },
     {
       pageType: "video",
-      title: "Page 2 Title",
+      title: "Title 2",
       video: "assets/media/hippa-training.mp4",
       description: "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus."
     },
     {
       pageType: "audio",
-      title: "Page 3 Title",
+      title: "Title 3",
       audio: "assets/media/audio-sample-1.mp3",
       description: "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus."
+    },
+    {
+      pageType: "true-false",
+      title: "Title 4",
+      question: "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus.",
+      answers: [ 
+        { answer: "True", correct: false },
+        { answer: "False", correct: true }
+      ],
+      solution: 1
+    },
+    {
+      pageType: "multiple-choice",
+      title: "Title 5",
+      question: "Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus.",
+      answers: [ 
+        { answer: "One Option", correct: false },
+        { answer: "Another Option", correct: false },
+        { answer: "Third Selection", correct: false },
+        { answer: "Finally, the last Option", correct: true }
+      ],
+      solution: 3 
+
     }
   ],
   assignedCount: 0,
