@@ -399,7 +399,10 @@ video {
 
 /* TRAINING MODULE QUIZ VIEWS
 ====================== */
-
+.multiple-choice-component > div, .true-false-component > div {
+  padding-left: 25px;
+  padding-right: 25px;
+}
 
 
 
