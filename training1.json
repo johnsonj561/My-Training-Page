@@ -22,6 +22,7 @@ var TrainingComponent = new Schema({
       name: "Justin Johnson"
     }
   ],
+  description: "This is a sample module description that introduces topics",
   lastEdit: "4/8/2017",
   components: [
     {
