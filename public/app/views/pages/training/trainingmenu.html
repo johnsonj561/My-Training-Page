@@ -1,0 +1,61 @@
+<!-- Header -->
+<div class="page-header">
+  <h1 class="text-center">Training Zone</h1>
+</div>
+<!-- Header -->
+
+<!-- Loading Icon -->
+<div class="jumbotron text-center" ng-show="">
+  <span class="glyphicon glyphicon-repeat spinner"></span>
+  <p>Loading....</p>
+</div>
+
+
+<!-- Search Filter Input  -->
+<div class="navbar-form training-search-filter">
+  <div class="btn-options">
+    <a class="btn btn-default">View New</a>
+    <a class="btn btn-default">View Completed</a>
+  </div>
+  <div class="input-group search-bar">
+    <span class="input-group-addon">Search:</span>
+    <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="searchKeyword"><br>
+  </div>
+
+
+</div>
+
+
+
+<!-- Available Training Modules 
+ng-repeat="person in management.users | filter: searchFilter | limitTo: management.limit"
+-->
+<div  class="training-preview row">
+
+  <div class="training-preview-body">
+    <p class="completion-star">
+      <span class="pull-left assignment-date">Assigned On: 3/31/17</span>
+      <span class="pull-right"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></span>
+    </p>
+    <h3>Training Module 1</h3>
+    <p>This is a brief description for Training Module 1. Enjoy your training!</p>
+  </div>
+
+  <div class="training-preview-footer">
+    <a class="btn btn-primary pull-right" href="/train">Start</a>
+    <label>Completed:</label>
+    <span class="completion-date">4/17/17</span>
+    <label>Score:</label>
+    <span class="training-preview-score text-success">85%</span>
+  </div>
+
+</div>
+
+
+
+
+<!-- Custom Error Message -->
+<div class="row show-hide-message" ng-show="management.showMoreError">
+  <div class="alert alert-danger">{{ management.showMoreError }}</div>
+</div>
+<!-- Custom Error Message -->
