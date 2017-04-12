@@ -171,6 +171,13 @@ var app = angular.module('appRoutes', ['ngRoute'])
     authenticated: true
   })
   
+  .when('/assigntraining', {
+    templateUrl: 'app/views/pages/management/assigntraining.html',
+    controller: 'assignTrainingCtrl',
+    controllerAs: 'assign',
+    authenticated: true
+  })
+  
   
   // "catch all" to redirect to home page            
   .otherwise({ redirectTo: '/' });
