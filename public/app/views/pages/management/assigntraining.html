@@ -1,0 +1,58 @@
+<!-- Header -->
+<div class="page-header">
+  <h1 class="text-center">Assign Training</h1>
+</div>
+<!-- Header -->
+
+<!-- Loading Icon -->
+<div class="jumbotron text-center" ng-show="">
+  <span class="glyphicon glyphicon-repeat spinner"></span>
+  <p>Loading....</p>
+</div>
+
+
+<!-- Search Filter Input  -->
+<div class="navbar-form training-search-filter">
+  <div class="input-group search-bar">
+    <span class="input-group-addon">Search:</span>
+    <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="searchFilter"><br>
+  </div>
+</div>
+
+
+<!-- Available Training Modules -->
+<div class="panel panel-primary">
+  <!-- Heading -->
+  <div class="panel-heading">
+    <strong>Select A Training Module</strong>
+  </div>
+  <!-- Start: Table -->
+  <table class="table assign-training-table">
+    <tr>
+      <th>Title</th>
+      <th>Creator</th>
+      <th>Last Edit</th>
+      <th class="description-column">Description</th>
+      <th>Select</th>
+    </tr>
+    <!-- NG REPEAT FOR ALL TRAINING MODULES -->
+    <tr ng-repeat="module in assign.modules | filter: searchFilter">
+      <td>{{ module.name }}</td>
+      <td>{{ module.author[0].name }}</td>
+      <td>{{ module.lastEdit }}</td>
+      <td class="description-column">{{ module.description }}</td>
+      <td><span class="assign-training" ng-click="alert('hello')">
+        <a ng-click="alert('hello')">Select <i class="fa fa-share fa-2x" aria-hidden="true"></i></a>
+        </span>
+      </td>
+    </tr>
+    <!-- End: Table -->
+  </table>
+</div>
+<!-- User Management Table -->
+
+<!-- Custom Error Message -->
+<div class="row show-hide-message" ng-show="training.showMoreError">
+  <div class="alert alert-danger">{{ training.showMoreError }}</div>
+</div>
+<!-- Custom Error Message -->
