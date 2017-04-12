@@ -15,6 +15,10 @@ angular.module('trainingServices', [])
     return $http.get('/api/usertraining/' + id);
   };
 
+  // get all training modules available to admin
+  trainingFactory.getTrainingModules = function() {
+    return $http.get('/api/alltraining');
+  }
 
   return trainingFactory;
 });
