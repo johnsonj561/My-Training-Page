@@ -204,7 +204,7 @@ module.exports = function(router) {
           // json web token stores session when user logs in
           // expiration 60 * 60 = 1 hour
           var token = jwt.sign({ username: user.username, email: user.email }, 
-                               secret, { expiresIn: '5m' });
+                               secret, { expiresIn: '1h' });
           res.json({ success: true, message: 'User Authenticated', token: token});
         }
       }
@@ -788,15 +788,38 @@ module.exports = function(router) {
       if(!trainingmodule) {
         res.json({ success: false, message: 'No trainingmodule found' });
       }
-      
+
       else {
         res.json({ success: true, message: 'trainingmodule found', trainingmodule: trainingmodule });
       }
     });
+  });
 
+
+  /*
+  * Get all training modules assigned to user with specified id
+  */
+  router.get('/usertraining/:id', function(req, res) {
 
 
   });
+
+  /*
+  * Get all available training module information for assignment page
+  */
+  router.get('/alltraining', function(req, res) {
+    TrainingModule.find({}).select('name author description lastEdit').exec(function(err, modules) {
+      if(err) throw err;
+      if(!modules) {
+        res.json({ success: false, message: 'No training modules were found' });
+      }
+      else {
+        res.json({ success: true, message: 'Training modules found', modules: modules });
+      } 
+    });
+  });
+
+
 
   return router;
 }
