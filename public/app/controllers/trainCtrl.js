@@ -77,7 +77,8 @@ angular.module('trainController', ['trainingServices'])
   // display in drop down menu for selection ?
   // when selected, submit the training module _id to server and return the training module
 
-  var training_id =  '58ec3ec3c5f7b7846ebc27c9';
+  var training_id2 =  '58ed9857990c04dee6dbd859';
+  var training_id = '58ed986c990c04dee6dbd85a';
 
   app.component = {};
 
@@ -116,6 +117,10 @@ angular.module('trainController', ['trainingServices'])
     }
   });
 
+  // get the training modules assigned to user with id
+  trainingFactory.getUserTraining = function(id) {
+    return $http.get('/api/usertraining/' + id);
+  };
 
 
   /*
@@ -237,6 +242,41 @@ angular.module('trainController', ['trainingServices'])
   // on completion/validation, update trainingmodule and user models with the results
 
   // return user to main menu
+
+
+})
+
+.controller('assignTrainingCtrl', function(TrainingModule, $location) {
+  
+  var app = this;
+  
+  
+  /*
+  * Get all available training modules
+  */
+  TrainingModule.getTrainingModules().then(function(data) {
+    // if training modules were found
+    if(data) {
+      
+      // bind module data to view
+      app.modules = data.data.modules; 
+     
+      // format the date
+      for(var i = 0; i < app.modules.length; i++) {
+        var edit = new Date(app.modules[i].lastEdit);
+        app.modules[i].lastEdit = (edit.getMonth()+1) + '/' + (edit.getDay()) + '/' + (edit.getFullYear());
+      }
+      
+    }
+    // if error occurs, render error message and re-direct to menu
+    else {
+      app.title = 'An Error Occurred, Redirecting...';
+      $timeout(function() {
+        $location.path('/menu');
+        $route.reload();
+      }, 2000);
+    }
+  });
 
 
 });
