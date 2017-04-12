@@ -227,11 +227,12 @@ angular.module('userControllers', ['userServices'])
   var app = this;
   app.errorMsg = false;
   app.disabled = true;
-
+  
   if($window.location.pathname == '/facebookerror') {
     app.errorMsg = 'Facebook email not found in database';
   }
   else if($window.location.pathname == '/facebook/inactive/error') {
+
     app.expired = true;
     app.errorMsg = 'Account is not yet actived. Please check your email for activation link.';
   }
