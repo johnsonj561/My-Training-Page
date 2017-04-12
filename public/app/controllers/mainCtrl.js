@@ -6,9 +6,16 @@ angular.module('mainController', ['authServices', 'userServices'])
 
   const TOKEN_EXPIRED_MODAL = 1;
   const PROMPT_LOGOUT_MODAL = 2;
-  const SESSION_EXPIRE_TIME = 60;
+  // web site will warn user when app has 5 minutes until expiration
+  const SESSION_EXPIRE_WARNING_TIME = 60*5;
 
+  /*
+  * Check Session
+  * If logged in, recurring interval set to check for valid token
+  * When token is near expiration, use will be promted to renew token
+  */
   app.checkSession = function() {
+    console.log('in checksession');
     if(Auth.isLoggedIn()) {
       app.checkingSession = true;
       var interval = $interval(function() {
@@ -23,16 +30,19 @@ angular.module('mainController', ['authServices', 'userServices'])
             return JSON.parse($window.atob(base64));
           }
 
+          // get the expiration time from token (initialized to 1 hour)
           var expireTime = self.parseJwt(token);
+          // get current time stamp
           var timeStamp = Math.floor(Date.now() /1000);
-          var timeCheck = expireTime.exp - timeStamp;
-          if(timeCheck <= SESSION_EXPIRE_TIME) {
+          // calc time til expiration = expiration time - current time
+          var timeLeft = expireTime.exp - timeStamp;
+          if(timeLeft <= SESSION_EXPIRE_WARNING_TIME) {
             showModal(TOKEN_EXPIRED_MODAL);
             $interval.cancel(interval);
           }
 
         }
-      }, 5000);
+      }, 10000);
     }
   };
 
@@ -65,8 +75,10 @@ angular.module('mainController', ['authServices', 'userServices'])
     // if no choice is made after 10 seconds, then log user out
     $timeout(function() {
       if(!app.choiceMade) {
-        console.log('Logged out');
+        Auth.logout(); // Logout user
+        $location.path('/'); // Change route to clear user object
         hideModal();
+        console.log('Logged out');
       }
     }, 10000);
   };
