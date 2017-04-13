@@ -117,11 +117,6 @@ angular.module('trainController', ['trainingServices'])
     }
   });
 
-  // get the training modules assigned to user with id
-  trainingFactory.getUserTraining = function(id) {
-    return $http.get('/api/usertraining/' + id);
-  };
-
 
   /*
   * Next Page
@@ -250,6 +245,16 @@ angular.module('trainController', ['trainingServices'])
   
   var app = this;
   
+  /*
+  * Select Module accepts training module id as parameter
+  * Stores the id for future reference
+  * Sets flags to hide training modules and display Users for selection process
+  */
+  app.selectModule = function(id) {
+    app.moduleSelected = true;
+    app.selectedTrainingId = id;
+    console.log(app.selectedTrainingId + ' has been stored');
+  }
   
   /*
   * Get all available training modules
