@@ -479,7 +479,9 @@ span.assign-training > a {
   transition: all 500ms linear;
 }
 
-
+span.assign-training > a:hover {
+  cursor: pointer;
+}
 
 span.assign-training > a:hover, span.assign-training:focus, span.assign-training:active {
   color: #eb8022;
@@ -487,8 +489,15 @@ span.assign-training > a:hover, span.assign-training:focus, span.assign-training
   -webkit-transition: all 500ms linear;
   -ms-transition: all 500ms linear;
   transition: all 500ms linear;
+}
 
+div.assignment-buttons {
+  height: 40px;
+}
 
+div.assignment-buttons > a {
+  margin-left: 5px;
+  width: 150px;
 }
 
   /* LOADING ICON
