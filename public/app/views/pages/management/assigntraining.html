@@ -13,6 +13,10 @@
 
 <!-- Search Filter Input  -->
 <div class="navbar-form training-search-filter">
+  <div class="assignment-buttons" ng-show="assign.moduleSelected">
+    <a class="btn btn-success pull-right" ng-click="assign.cancelAssignment()">Submit Assignment</a>
+    <a class="btn btn-danger pull-right" ng-click="assign.cancelAssignment()">Cancel Assignment</a>
+  </div>
   <div class="input-group search-bar">
     <span class="input-group-addon">Search:</span>
     <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="searchFilter"><br>
@@ -26,8 +30,9 @@
   <div class="panel-heading">
     <strong>Select A Training Module</strong>
   </div>
-  <!-- Start: Table -->
-  <table class="table assign-training-table">
+
+  <!-- TRAINING MODULE TABLE -->
+  <table class="table assign-training-table" ng-show="!assign.moduleSelected">
     <tr>
       <th>Title</th>
       <th>Creator</th>
@@ -41,13 +46,34 @@
       <td>{{ module.author[0].name }}</td>
       <td>{{ module.lastEdit }}</td>
       <td class="description-column">{{ module.description }}</td>
-      <td><span class="assign-training" ng-click="alert('hello')">
+      <td><span class="assign-training" ng-click="assign.selectModule(module._id)">
         <a ng-click="alert('hello')">Select <i class="fa fa-share fa-2x" aria-hidden="true"></i></a>
         </span>
       </td>
-    </tr>
+    </tr>    
     <!-- End: Table -->
   </table>
+
+
+  <!-- USERS TABLE -->
+  <table class="table assign-training-table" ng-show="assign.moduleSelected">
+    <tr>
+      <th>Name</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Select</th>
+    </tr>
+    <!-- NG REPEAT FOR ALL USERS -->
+    <tr ng-repeat="user in assign.users | filter: searchFilter">
+      <td>{{ user.name }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.email }}</td>
+      <td> <label><input type="checkbox" value="{{ user._id }}">Option 1</label></td>
+    </tr>    
+    <!-- End: Table -->
+  </table>
+
+
 </div>
 <!-- User Management Table -->
 
