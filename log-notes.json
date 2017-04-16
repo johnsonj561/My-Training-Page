@@ -1,0 +1,88 @@
+{
+  name: "Log Notes Documentation",
+  author:[
+    {
+      _id: ObjectId("58db0ec4127e7e1728aa5da4"),
+      name: "Justin Johnson"
+    }
+  ],
+  description: "An introduction to Resident Manager Log Notes and documentation protocol.",
+  lastEdit: "4/15/2017",
+  components: [
+    {
+      pageType: "text",
+      title: "Introduction",
+      body: "Log Notes are the primary means of documentaton for Resident Managers and they are written by the Resident Managers on shift. Log notes should paint a picture of the day's activities, providing specific details of events and client behaviors/interactions. Log notes are read on a daily basis by all departments at Ambrosia – Operations, Clinical, Medical, and UR rely heavily on the Resident Manager’s log notes to receive accurate updates on client behavior, well being, and treatment progress. 
+    },
+    {
+      pageType: "true-false",
+      title: "Question 1",
+      question: "Log notes are only read by the Resident Managers and their direct supervisors.",
+      answers: [ 
+        { answer: "True"},
+        { answer: "False"}
+      ],
+      solution: 1
+    },
+    {
+      pageType: "text",
+      title: "How To Document",
+      body: "Log notes are written for every shift and should be started as soon as Resident Managers arrive to work. All Resident Managers should participate in note taking, as different staff members have different perspectives and insight. Notes are typed on the RM computer and then emailed to supervisors at the end of shift. Notes must be as detailed as possible to prevent other staff members from misinterprating. The Operations Supervisors will proof read log notes and then share them with the appropriate departments.",
+    },
+    {
+      pageType: "multiple-choice",
+      title: "Question 2",
+      question: "Which of the following statements is not true?",
+      answers: [ 
+        { answer: "Log notes must be written for every shift."},
+        { answer: "The shift lead should write most of the notes."},
+        { answer: "Log notes are emailed to the Operations Supervisor at the end of shift."},
+        { answer: "Log notes should be started at the beginning of shift."}
+      ],
+      solution: 1
+    },
+    {
+      pageType: "text",
+      title: "What To Document",
+      body: "Common documentation includes: <br>'Hourly rounds completed' plus update with any chagnes<br>Transportation to center, residence, outside meetings, shopping, outdoor activities with departure time and head count<br>Behavioral issues are documented so that clinical can reinforce client rules & regulations<br>Noticeable change in client well being and progress in treatment, both good and bad<br>Suspicion of drug use, self-harm, eating disorder, or sexual activity<br>Any information that can help the clinical team to treat their clients - a wide range of information from behavior/personality changes, isolation, conflict between clients, medication non-compliance, etc",
+    },
+    {
+      pageType: "true-false",
+      title: "Question 3",
+      question: "Log Notes and proper documentation assist therapists in treating their clients.",
+      answers: [ 
+        { answer: "True"},
+        { answer: "False"}
+      ],
+      solution: 0
+    },
+    {
+      pageType: "true-false",
+      title: "Question 4",
+      question: "If an incident or event is significant and requires immediate attention, Resident Managers should contact their supervisor in addition to documenting the incident in the log notes.",
+      answers: [ 
+        { answer: "True"},
+        { answer: "False"}
+      ],
+      solution: 0
+    },
+    {
+      pageType: "multiple-choice",
+      title: "Question 5",
+      question: "Select an incident that should be documented in the log notes by a Resident Manager",
+      answers: [ 
+        { answer: "Hourly rounds completed, all is well"},
+        { answer: "Specific paraphenelia was confiscated from John S luggage during admission process"},
+        { answer: "2018B is continuously reminded to clean the kitchen and put their dirty dishes away. Clients are refusing to clean."},
+        { answer: "I observed Mary K playing basketball while on restriction. She was reminded of restriction and asked to stop playing, she complied" },
+        { answer: "All of the above"}
+      ],
+      solution: 4
+    }
+  ],
+  assignedCount: 0,
+  completedCount: 0,
+  totalScores: 0,
+  lowScore: 0,
+  highScore: 0
+}
