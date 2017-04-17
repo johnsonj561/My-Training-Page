@@ -7,12 +7,12 @@
     }
   ],
   description: "An introduction to Resident Manager Log Notes and documentation protocol.",
-  lastEdit: "4/15/2017",
+  lastEdit: "4/16/2017",
   components: [
     {
       pageType: "text",
       title: "Introduction",
-      body: "Log Notes are the primary means of documentaton for Resident Managers and they are written by the Resident Managers on shift. Log notes should paint a picture of the day's activities, providing specific details of events and client behaviors/interactions. Log notes are read on a daily basis by all departments at Ambrosia – Operations, Clinical, Medical, and UR rely heavily on the Resident Manager’s log notes to receive accurate updates on client behavior, well being, and treatment progress. 
+      body: "Log Notes are the primary means of documentaton for Resident Managers and they are written by the Resident Managers on shift. Log notes paint a picture of the day's activities, providing specific details of events and client behavior/interaction. Log notes are read on a daily basis by all departments of Ambrosia – Operations, Clinical, Medical, and UR rely heavily on the Resident Manager’s log notes to receive accurate updates on client behavior, well being, and treatment progress."
     },
     {
       pageType: "true-false",

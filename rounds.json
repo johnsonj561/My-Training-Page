@@ -1,0 +1,101 @@
+{
+  name: "Rounds Documentation",
+  author:[
+    {
+      _id: ObjectId("58db0ec4127e7e1728aa5da4"),
+      name: "Justin Johnson"
+    }
+  ],
+  description: "An introduction to Resident Manager Rounds and documentation protocol.",
+  lastEdit: "4/16/2017",
+  components: [
+    {
+      pageType: "text",
+      title: "Introduction",
+      body: "It is the responsibility of the Resident Manager's to maintain accountability of clients at all times. This is achieved by completing Rounds on an at least hourly basis. Completing rounds entails documenting the where abouts of every client. Each client is located and their location is documented on the shift's Rounds form. If anything unusual is encountered while conducting Rounds, these details are to be documented in the Log Notes and a supervisor should be contacted if immediate attention is required.". 
+    },
+    {
+      pageType: "true-false",
+      title: "Question 1",
+      question: "Rounds are completed every 1 - 2 hours, when convenient for the Resident Manager staff.",
+      answers: [ 
+        { answer: "True"},
+        { answer: "False"}
+      ],
+      solution: 1
+    },
+    {
+      pageType: "tue-false",
+      title: "Question 2",
+      question: "The primary purpose of Rounds is to ensure that all clients are present and accounted for.",
+      answers: [ 
+        { answer: "True"},
+        { answer: "False"}
+      ],
+      solution: 0
+    },
+    {
+      pageType: "text",
+      title: "How To Document Rounds",
+      body: "Rounds are documented for every shift and should be started as soon as Resident Managers arrive to work. At the beginning of each shift a new Rounds form should prepared, including the full names of all staff members on shift, date, time, and complete list of all clients currently at the facility. Rounds are completed on an at least hourly basis, meaning more than 1 hour should never pass between sets of rounds. It is encouraged to mix up how rounds are done - start at a different area of the property each time, and mix up the timing of the Rounds. If the clients recognize a pattern in your Rounds they will find ways to work around you and get away with acting out. The following page will display a sample rounds form and how it is filled out. Notice the abbreviations that represent where a client/what client is doing at the time that Rounds were completed.",
+    },
+    {
+      pageType: "image",
+      title: "Example Rounds",
+      image: "assets/media/rounds-image.png",
+      description: "This example rounds form has been filled out for the 1st hour of shift, 3:00pm. Notice that all current clients are listed in the left most column according to housing assignments. Also notice the abbreviations that are listed in the 3:00pm rounds column. These abbreviations denote where the client ws seen when rounds were completed. These abbreviations can be found on the next page."
+    },
+    {
+      pageType: "image",
+      title: "Rounds Abbreviations",
+      image: "assets/media/rounds-abbreviations-image.png",
+      description: "These are some of the common abbreviations used to denote where clients are found while completing rounds. NOTE - 'SBR' is used whenever documenting that someone is sleeping, because staff is required to observe that the client is breathing and then document that the client is 'Sleeping and Breathing'. Writing an 'S' for sleeping is not sufficient. Also note that abbreviations can be combined by using a forward slash (/) between abbreviations."
+    },
+    {
+      pageType: "multiple-choice",
+      title: "Question 3",
+      question: "Which abbreviation should be used to document a client that is smoking on the patio?",
+      answers: [ 
+        { answer: "SM"},
+        { answer: "PA"},
+        { answer: "SPA"},
+        { answer: "SM/PA"}
+      ],
+      solution: 3
+    },
+    {
+      pageType: "text",
+      title: "Special Circumstances",
+      body: "Rounds should be continuous - frequent contact with the clients is important to the safety of the community and is beneficial to the client's and their recovery. There may also be certain circumstances that warrant extra attention. At times, the clinical or operations teams may place a client on Q15s or Q30s, which means that this specific client now requires being checked on every 15 minutes or 30 minutes. This is typically done when staff is concerned about a client's well being or safety for one reason or another. A few areas of concern that would warrant extra attention include self-harm, eating disorder, mental instability, medical conditions, sexual acting out, or high risk for relapse/walk off."
+    },
+    {
+      pageType: "multiple-choice",
+      title: "Question 4",
+      question: "When a therapist places a client John S on Q15s, ",
+      answers: [ 
+        { answer: "Resident Managers should ask John S why he was placed on Q15s."},
+        { answer: "Resident Managers should complete rounds for John S at least every 15 minutes."},
+        { answer: "Resident Managers should continue to complete rounds on an hourly basis."},
+        { answer: "Resident Managers should ask other clients to keep a close eye on John S for them."}
+      ],
+      solution: 1
+    },
+    {
+      pageType: "true-false",
+      title: "Question 5",
+      question: "If a client was on Q15s yesterday and you are unsure if they are still on Q15s, you should ",
+      answers: [ 
+        { answer: "Ask the client if they are still on Q15s"},
+        { answer: "Ask other clients in community if client is still on Q15s."},
+        { answer: "Assume that the client is no longer on Q15s because it is a new day."},
+        { answer: "Contact you supervisor or shift lead for clarification."}
+      ],
+      solution: 3
+    },
+  ],
+    assignedCount: 0,
+    completedCount: 0,
+    totalScores: 0,
+    lowScore: 0,
+    highScore: 0
+    }
