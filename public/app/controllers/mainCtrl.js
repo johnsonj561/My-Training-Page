@@ -6,6 +6,7 @@ angular.module('mainController', ['authServices', 'userServices'])
 
   const TOKEN_EXPIRED_MODAL = 1;
   const PROMPT_LOGOUT_MODAL = 2;
+  const TRAINING_ASSIGNMENT_MESSAGE =  3;
   // web site will warn user when app has 5 minutes until expiration
   const SESSION_EXPIRE_WARNING_TIME = 60*5;
 
@@ -71,6 +72,16 @@ angular.module('mainController', ['authServices', 'userServices'])
         $route.reload();
       }, 1000);
     }
+    else if(option === TRAINING_ASSIGNMENT_MESSAGE) {
+      app.modalHeader = 'Training Modules Assigned';
+      app.modalBody = 'All training module assignments have been assigned.';
+      $('#myModal').modal({ backdrop: 'static' });
+      $timeout(function() {
+        $location.path('/menu'); // Change route to clear user object
+        $route.reload();
+      }, 1500);
+    }
+
 
     // if no choice is made after 10 seconds, then log user out
     $timeout(function() {
