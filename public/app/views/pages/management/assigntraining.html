@@ -10,18 +10,22 @@
   <p>Loading....</p>
 </div>
 
-
-<!-- Search Filter Input  -->
-<div class="navbar-form training-search-filter">
-  <div class="assignment-buttons" ng-show="assign.moduleSelected">
-    <a class="btn btn-success pull-right" ng-click="assign.cancelAssignment()">Submit Assignment</a>
-    <a class="btn btn-danger pull-right" ng-click="assign.cancelAssignment()">Cancel Assignment</a>
+<!-- Simple Search Bar -->
+<div class="navbar-form search-filter">
+  <label>Search Filter</label>
+  <div class="form-group">
+    <!-- Search Input -->
+    <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="searchKeyword">
   </div>
-  <div class="input-group search-bar">
-    <span class="input-group-addon">Search:</span>
-    <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="searchFilter"><br>
-  </div>
+  <!-- Search Button -->
+  <button type="button" ng-click="assign.search(searchKeyword);" class="btn btn-default">Search</button>
+  <!-- Clear Button -->
+  <button type="button" ng-click="assign.clear();" class="btn btn-default">Clear</button>
+  <!-- Submit Assignment Button -->
+  <button type="button" ng-disabled="assign.submitDisabled" ng-show="assign.moduleSelected" ng-click="assign.submitAssignment();" 
+          class="btn btn-success pull-right">Submit Assignments</button>
 </div>
+<!-- Simple Search Bar /-->
 
 
 <!-- Available Training Modules -->
@@ -37,17 +41,17 @@
       <th>Title</th>
       <th>Creator</th>
       <th>Last Edit</th>
-      <th class="description-column">Description</th>
+      <th class="desktop-only">Description</th>
       <th>Select</th>
     </tr>
     <!-- NG REPEAT FOR ALL TRAINING MODULES -->
-    <tr ng-repeat="module in assign.modules | filter: searchFilter">
+    <tr ng-repeat="module in assign.modules | filter: assign.searchFilter">
       <td>{{ module.name }}</td>
       <td>{{ module.author[0].name }}</td>
       <td>{{ module.lastEdit }}</td>
-      <td class="description-column">{{ module.description }}</td>
-      <td><span class="assign-training" ng-click="assign.selectModule(module._id)">
-        <a ng-click="alert('hello')">Select <i class="fa fa-share fa-2x" aria-hidden="true"></i></a>
+      <td class="desktop-only">{{ module.description }}</td>
+      <td><span class="assign-training" ng-click="assign.selectModule($index)">
+        <a>Select <i class="fa fa-share fa-2x" aria-hidden="true"></i></a>
         </span>
       </td>
     </tr>    
@@ -59,16 +63,17 @@
   <table class="table assign-training-table" ng-show="assign.moduleSelected">
     <tr>
       <th>Name</th>
-      <th>Username</th>
+      <th class="desktop-only">Username</th>
       <th>Email</th>
       <th>Select</th>
     </tr>
     <!-- NG REPEAT FOR ALL USERS -->
-    <tr ng-repeat="user in assign.users | filter: searchFilter">
+    <tr ng-repeat="user in assign.users | filter: assign.searchFilter">
       <td>{{ user.name }}</td>
-      <td>{{ user.username }}</td>
+      <td class="desktop-only">{{ user.username }}</td>
       <td>{{ user.email }}</td>
-      <td> <label><input type="checkbox" value="{{ user._id }}">Option 1</label></td>
+      <td> <label><input type="checkbox" name="assign.selectedUsers[]" value="{{user._id}}" ng-checked="assign.selection.indexOf(user._id) > -1"
+                         ng-click="assign.toggleUserSelection(user._id)"></label></td>
     </tr>    
     <!-- End: Table -->
   </table>
@@ -76,9 +81,3 @@
 
 </div>
 <!-- User Management Table -->
-
-<!-- Custom Error Message -->
-<div class="row show-hide-message" ng-show="training.showMoreError">
-  <div class="alert alert-danger">{{ training.showMoreError }}</div>
-</div>
-<!-- Custom Error Message -->
