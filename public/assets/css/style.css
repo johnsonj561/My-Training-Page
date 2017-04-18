@@ -171,7 +171,6 @@ ul.navbar-right {
   .mobile-logo {
     display: none;
   }
-
 }
 @media(min-width: 400px) {
   .mobile-logo-mini {
@@ -466,7 +465,7 @@ video {
 
 /* hide the description on very small screens */
 @media(max-width: 450px) {
-  .description-column {
+  .desktop-only {
     display: none;
   }
 }
