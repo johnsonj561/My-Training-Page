@@ -70,17 +70,6 @@ var scoreValidator = [
 
 
 /*
-* Assignment Schema
-* Maps Training modules to user
-* Negative score reflects training module not yet completed
-*/
-var AssignmentSchema = new Schema({
-  moduleId: {type: String, required: true},
-  score: {type: Number, required: true, default: -1, validate: scoreValidator}
-});
-
-
-/*
 * User schema
 */
 var UserSchema = new Schema({
