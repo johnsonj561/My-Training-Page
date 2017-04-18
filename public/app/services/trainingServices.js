@@ -19,6 +19,12 @@ angular.module('trainingServices', [])
   trainingFactory.getTrainingModules = function() {
     return $http.get('/api/alltraining');
   }
+  
+  // assign training module to users
+  trainingFactory.assignTraining = function(assignmentData) {
+    console.log('in training services');
+    return $http.put('/api/assignTraining', assignmentData);
+  }
 
   return trainingFactory;
 });
