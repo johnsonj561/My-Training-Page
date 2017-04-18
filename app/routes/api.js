@@ -550,6 +550,27 @@ module.exports = function(router) {
   });
 
 
+  /*
+  * Get Users that do not have a training module assigned with id = trainingId
+  * Allows view to only display users not already assigned to a training module
+  */
+  router.get('/management/:id', function(req, res) {
+    var trainingId = req.params.id;
+    console.log('loading users that do not have assignment id ' + trainingId);
+    User.find({'assignments.module._id': {$ne: trainingId}}, function(err, users) {
+      if(err) throw err;
+      if(!users) {
+        res.json({ message: false, message: 'Users not found' });
+      }
+      else{
+        console.log('/api/management/ success, users found');
+        res.json({ success: true, users: users });  
+      }
+    });
+
+  });
+
+
   router.delete('/management/:username', function(req, res) {
     var deletedUser = req.params.username;
     User.findOne({ username: req.decoded.username }, function(err, mainUser) {
@@ -817,6 +838,44 @@ module.exports = function(router) {
         res.json({ success: true, message: 'Training modules found', modules: modules });
       } 
     });
+  });
+
+
+  /*
+  * Assign Training Modules
+  * Pushes training module assignment into all user profiles where does not exist
+  */
+  router.put('/assignTraining', function(req, res) {
+
+    // for each user, update their assigments
+    var users = req.body.selectedUsers;
+
+    // build training module object to push into assignments object
+    var module = {};
+    module._id = req.body.selectedModule._id;
+    module.name = req.body.selectedModule.name;
+    module.description = req.body.selectedModule.description;
+    module.score = -1;
+    var date = new Date();
+    module.assignedDate = (date.getMonth() + 1) + '/' + (date.getDate()) + '/' + (date.getFullYear());
+
+    // for each user, push training module into assignments array
+    users.forEach(function(user) {
+      User.findByIdAndUpdate(
+        user,
+        {$addToSet: {"assignments": {module}}},
+        {safe: true, upsert: true},
+        function(err, user) {
+          if(err) throw err;
+          if(!user) {
+            res.json({ success: false, message: 'User not found, unable to assign training module' });
+          }
+        }
+      )
+    });
+
+    res.json({ success: true, message: 'Training Module Assignments Complete' });
+
   });
 
 
