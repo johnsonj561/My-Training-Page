@@ -241,37 +241,126 @@ angular.module('trainController', ['trainingServices'])
 
 })
 
-.controller('assignTrainingCtrl', function(TrainingModule, $location) {
-  
+
+
+  .controller('assignTrainingCtrl', function(TrainingModule, User, $location, $scope, $timeout) {
+
   var app = this;
-  
+
+  app.selectedUsers = [];
+  app.selectedModule = undefined;
+  app.modules = undefined;
+  app.users = undefined;
+  app.submitDisabled = true;
+
+  var today = new Date();
+  console.log(today.getMonth() + 1 + '/' + today.getDate() + '/' + today.getFullYear());
+
+
   /*
-  * Select Module accepts training module id as parameter
-  * Stores the id for future reference
+  * Select Module accepts training module index as parameter
+  * Uses the index to store the selected module for future use
   * Sets flags to hide training modules and display Users for selection process
   */
-  app.selectModule = function(id) {
+  app.selectModule = function(idx) {
+    // store the selected module
     app.moduleSelected = true;
-    app.selectedTrainingId = id;
-    console.log(app.selectedTrainingId + ' has been stored');
+    app.selectedModule = app.modules[idx];
+    // then get the users to display for selection
+    // we should pass the training module id and not get users that are already assigned
+    User.getUsersToTrain(app.selectedModule._id).then(function(data){
+      app.users = data.data.users;
+    });
+  };
+
+  /*
+  * Toggle User Selection
+  * Handles user selection on the training module assignment view
+  * Builds array of selected users by binding to check boxes
+  */
+  app.toggleUserSelection = function (user) {
+    var idx = app.selectedUsers.indexOf(user);
+    if(idx > -1 ) {
+      app.selectedUsers.splice(idx, 1);
+    }
+    else {
+      app.selectedUsers.push(user);
+    }
+    if(app.selectedUsers.length > 0) {
+      app.submitDisabled = false;
+    }
+    else {
+      app.submitDisabled = true;
+    }
+  };
+
+  /*
+  * Submit Assignment
+  *
+  */
+  app.submitAssignment = function() {
+    app.submitDisabled = true;
+
+    // for each user._id, push an assignment into their db
+    // we will append the users array to the selectedModule data and send together
+    var assignmentData = {};
+    assignmentData.selectedUsers = app.selectedUsers;
+    assignmentData.selectedModule = app.selectedModule;
+    // need module._id, module.title, and module.description
+    TrainingModule.assignTraining(assignmentData).then(function(data) {
+      if(data.data.success) {
+        console.log('training assignments have been completed, redrecting...');
+        $timeout(function() {
+          $location.path('/menu');
+        }, 2000);
+      }
+
+    });
+
   }
-  
+
+
+
+  /*
+  * Search accepts keyword(s) and applies filter to results
+  */
+  app.search = function(searchKeyword) {
+    // Check if a search keyword was provided
+    if (searchKeyword) {
+      // Check if the search keyword actually exists
+      if (searchKeyword.length > 0) {
+        app.searchFilter = searchKeyword; // Set the search filter to the word provided by the user
+      } else {
+        app.searchFilter = undefined; // Remove any keywords from filter
+      }
+    } else {
+      app.searchFilter = undefined; // Reset
+    }
+  };
+
+
+  /*
+  * Clear removes filter from results and clears 
+  */
+  app.clear = function() {
+    $scope.searchKeyword = undefined; // Clear the search word
+    app.searchFilter = undefined; // Clear the search filter
+  };
+
+
   /*
   * Get all available training modules
   */
   TrainingModule.getTrainingModules().then(function(data) {
     // if training modules were found
     if(data) {
-      
       // bind module data to view
       app.modules = data.data.modules; 
-     
       // format the date
       for(var i = 0; i < app.modules.length; i++) {
         var edit = new Date(app.modules[i].lastEdit);
         app.modules[i].lastEdit = (edit.getMonth()+1) + '/' + (edit.getDay()) + '/' + (edit.getFullYear());
       }
-      
     }
     // if error occurs, render error message and re-direct to menu
     else {
