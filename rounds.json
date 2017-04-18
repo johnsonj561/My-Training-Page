@@ -12,7 +12,7 @@
     {
       pageType: "text",
       title: "Introduction",
-      body: "It is the responsibility of the Resident Manager's to maintain accountability of clients at all times. This is achieved by completing Rounds on an at least hourly basis. Completing rounds entails documenting the where abouts of every client. Each client is located and their location is documented on the shift's Rounds form. If anything unusual is encountered while conducting Rounds, these details are to be documented in the Log Notes and a supervisor should be contacted if immediate attention is required.". 
+      body: "It is the responsibility of the Resident Manager's to maintain accountability of clients at all times. This is achieved by completing Rounds on an at least hourly basis. Completing rounds entails documenting the where abouts of every client. Each client is located and their location is documented on the shift's Rounds form. If anything unusual is encountered while conducting Rounds, these details are to be documented in the Log Notes and a supervisor should be contacted if immediate attention is required."
     },
     {
       pageType: "true-false",
@@ -98,4 +98,4 @@
     totalScores: 0,
     lowScore: 0,
     highScore: 0
-    }
+}
