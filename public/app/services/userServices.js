@@ -6,11 +6,11 @@ angular.module('userServices', [])
   userFactory.create = function(regData) {
     return $http.post('/api/users', regData); // Return data from end point to controller
   };
-  
+
   userFactory.updateUser = function(editData) {
     return $http.post('/api/updateuser', editData);
   };
-  
+
   userFactory.updatePassword = function(passwordData) {
     return $http.post('/api/updatepassword', passwordData);
   };
@@ -69,6 +69,11 @@ angular.module('userServices', [])
     return $http.get('/api/management/');
   };
 
+  userFactory.getUsersToTrain = function(id) {
+    return $http.get('/api/management/' + id);
+  };
+
+
   userFactory.getUser = function(id) {
     return $http.get('/api/edit/' + id);  
   };
@@ -80,10 +85,13 @@ angular.module('userServices', [])
   userFactory.editUser = function(id) {
     return $http.put('/api/edit/', id);
   };
-  
+
   userFactory.getCurrentUser = function() {
     return $http.get('/api/getcurrent');
   };
+
+
+
 
   return userFactory;
 });
