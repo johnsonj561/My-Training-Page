@@ -25,7 +25,7 @@
       solution: 1
     },
     {
-      pageType: "tue-false",
+      pageType: "true-false",
       title: "Question 2",
       question: "The primary purpose of Rounds is to ensure that all clients are present and accounted for.",
       answers: [ 
