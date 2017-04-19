@@ -5,20 +5,33 @@
 <!-- Header -->
 
 <!-- Loading Icon -->
-<div class="jumbotron text-center" ng-show="">
+<div class="jumbotron text-center" ng-show="assign.loading">
   <span class="glyphicon glyphicon-repeat spinner"></span>
   <p>Loading....</p>
 </div>
 
+<!-- Custom Success Message -->
+<div class="row show-hide-message" ng-show="assign.successMsg">
+  <div class="alert alert-success">{{ assign.successMsg }}</div>
+</div>
+<!-- Custom Success Message -->
+
+<!-- Custom Error Message -->
+<div class="row show-hide-message" ng-show="assign.errorMsg">
+  <div class="alert alert-danger">{{ assign.errorMsg }}</div>
+</div>
+<!-- Custom Error Message -->
+
+
 <!-- Simple Search Bar -->
-<div class="navbar-form search-filter">
+<div ng-hide="assign.loading || assign.successMsg || assign.errorMsg" class="navbar-form search-filter">
   <label>Search Filter</label>
   <div class="form-group">
     <!-- Search Input -->
-    <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="searchKeyword">
+    <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="assign.searchKeyword">
   </div>
   <!-- Search Button -->
-  <button type="button" ng-click="assign.search(searchKeyword);" class="btn btn-default">Search</button>
+  <button type="button" ng-click="assign.search(assign.searchKeyword);" class="btn btn-default">Search</button>
   <!-- Clear Button -->
   <button type="button" ng-click="assign.clear();" class="btn btn-default">Clear</button>
   <!-- Submit Assignment Button -->
