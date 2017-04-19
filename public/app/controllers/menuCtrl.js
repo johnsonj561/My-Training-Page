@@ -7,7 +7,6 @@ angular.module('menuController', ['userServices', 'authServices'])
   app.displayProgressBar = true;
 
 
-
   /*
   * Get permission of current user
   */
