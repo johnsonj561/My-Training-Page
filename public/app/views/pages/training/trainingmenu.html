@@ -5,55 +5,61 @@
 <!-- Header -->
 
 <!-- Loading Icon -->
-<div class="jumbotron text-center" ng-show="">
+<div class="jumbotron text-center" ng-show="training.loading">
   <span class="glyphicon glyphicon-repeat spinner"></span>
   <p>Loading....</p>
 </div>
 
-
-<!-- Search Filter Input  -->
-<div class="navbar-form training-search-filter">
-  <div class="btn-options">
-    <a class="btn btn-default">View New</a>
-    <a class="btn btn-default">View Completed</a>
-  </div>
-  <div class="input-group search-bar">
-    <span class="input-group-addon">Search:</span>
-    <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="searchKeyword"><br>
-  </div>
+<!-- Custom Success Message -->
+<div class="row show-hide-message" ng-show="training.successMsg">
+  <div class="alert alert-success">{{ training.successMsg }}</div>
 </div>
+<!-- Custom Success Message -->
 
+<!-- Custom Error Message -->
+<div class="row show-hide-message" ng-show="training.errorMsg">
+  <div class="alert alert-danger">{{ training.errorMsg }}</div>
+</div>
+<!-- Custom Error Message -->
 
+<!-- Simple Search Bar -->
+<div ng-hide="training.loading || training.successMsg || training.errorMsg" class="navbar-form search-filter">
+  <label>Search Filter</label>
+  <div class="form-group">
+    <!-- Search Input -->
+    <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="training.searchKeyword">
+  </div>
+  <!-- Search Button -->
+  <button type="button" ng-click="training.search(training.searchKeyword);" class="btn btn-default">Search</button>
+  <!-- Clear Button -->
+  <button type="button" ng-click="training.clear();" class="btn btn-default">Clear</button>
+  <!-- Submit Assignment Button -->
+  <button type="button" ng-click="training.toggleCompleted();" id="view-completed-btn" 
+          class="btn btn-default pull-right">View Completed</button>
+  
+</div>
+<!-- Simple Search Bar /-->
 
-<!-- Available Training Modules 
-ng-repeat="person in management.users | filter: searchFilter | limitTo: management.limit"
--->
-<div  class="training-preview row">
+<!-- Available Training Modules -->
+<!-- show training module if it is incomplete (score < 0) or if is complete (score > 0) and viewCompleted option is set to true -->
+<div ng-repeat="assignment in training.assignments  | filter: training.searchFilter" class="training-preview row"
+     ng-show="(assignment.module.score < 0) || (training.viewCompleted)">
 
   <div class="training-preview-body">
     <p class="completion-star">
-      <span class="pull-left assignment-date">Assigned On: 3/31/17</span>
-      <span class="pull-right"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></span>
+      <span class="pull-left assignment-date">Assigned On: {{ assignment.module.assignedDate }}</span>
+      <span ng-show="assignment.module.score >= 0" class="pull-right"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></span>
     </p>
-    <h3>Training Module 1</h3>
-    <p>This is a brief description for Training Module 1. Enjoy your training!</p>
+    <h3>{{ assignment.module.name }}</h3>
+    <p>{{ assignment.module.description }}</p>
   </div>
 
   <div class="training-preview-footer">
-    <a class="btn btn-primary pull-right" href="/train">Start</a>
-    <label>Completed:</label>
-    <span class="completion-date">4/17/17</span>
-    <label>Score:</label>
-    <span class="training-preview-score text-success">85%</span>
+    <a class="btn btn-primary pull-right" href="/train/{{assignment.module._id}}">Start</a>
+    <label ng-show="assignment.module.completionDate">Completed:</label>
+    <span ng-show="assignment.module.completionDate" class="completion-date">4/17/17</span>
+    <label ng-show="assignment.module.score > -1">Score:</label>
+    <span ng-show="assignment.module.score > -1" class="training-preview-score text-success">{{ assignment.module.score }}</span>
   </div>
 
 </div>
-
-
-
-
-<!-- Custom Error Message -->
-<div class="row show-hide-message" ng-show="management.showMoreError">
-  <div class="alert alert-danger">{{ management.showMoreError }}</div>
-</div>
-<!-- Custom Error Message -->
