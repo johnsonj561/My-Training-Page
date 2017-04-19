@@ -1,8 +1,158 @@
-angular.module('trainController', ['trainingServices'])
+angular.module('trainController', ['trainingServices', 'userServices'])
 
-  .controller('trainCtrl', function(TrainingModule, $location, $scope) {
+  .controller('trainCtrl', function(TrainingModule, $location, User) {
+
+  var app = this;  
+  app.user = {};
+  app.components = {};
+  app.assignments = {};
+  app.test = 'hello';
+  app.viewCompleted = false;
+
+  /*
+  * Get the Training Modules associated with current user
+  */
+  User.getCurrentUser().then(function(data) {
+    if(data.data.success) {
+      app.loading = false;
+      app.user._id = data.data.user._id;
+      TrainingModule.getUserTraining(app.user._id).then(function(data) {
+        if(data.data.success) {
+          app.assignments = data.data.assignments[0].assignments;
+          if(app.assignments.length == 0) {
+            app.errorMsg = "You don't have any training assignments to complete at this time.";  
+          }
+        }
+        else {
+          app.loading = false;
+          app.errorMsg = data.data.message;
+        }
+      });
+    }
+    else {
+      app.errorMsg = data.data.message;
+    }
+  });
+
+  /*
+  * Toggle Completed Display
+  * Enables/disables the completed training module views
+  * Allows user to determine whether or not they can see the completed training modules
+  */
+  app.toggleCompleted = function() {
+    // if completed are visible
+    if(app.viewCompleted) {
+      app.viewCompleted = false;
+      $("button#view-completed-btn").text("Show Completed");
+    }
+    else {
+      app.viewCompleted = true;
+      $("button#view-completed-btn").text("Hide Completed");
+    }
+  }
+
+
+  /*
+  * Search accepts keyword(s) and applies filter to results
+  */
+  app.search = function(searchKeyword) {
+    // Check if a search keyword was provided
+    if (searchKeyword) {
+      // Check if the search keyword actually exists
+      if (searchKeyword.length > 0) {
+        app.searchFilter = searchKeyword; // Set the search filter to the word provided by the user
+      } else {
+        app.searchFilter = undefined; // Remove any keywords from filter
+      }
+    } else {
+      app.searchFilter = undefined; // Reset
+    }
+  };
+
+
+  /*
+  * Clear removes filter from results and clears 
+  */
+  app.clear = function() {
+    app.searchKeyword = undefined; // Clear the search word
+    app.searchFilter = undefined; // Clear the search filter
+  };
+
+})
+
+
+/*
+* Complete Training Controller
+* Controller that handles training course completion and grading
+*/
+  .controller('completeTrainingCtrl', function(TrainingModule, User, $routeParams, $timeout) {
+
+  var app = this;
 
   app = this;  
+  app.errorMsg = false;
+  app.successMsg = false;
+  app.loading = false;
+  app.user = {};
+
+  /*
+  * Get the current user
+  */
+  User.getCurrentUser().then(function(data) {
+    if(data.data.success) {
+      app.loading = false;
+      app.user._id = data.data.user._id;
+    }
+    else {
+      app.errorMsg = data.data.message;
+      $timeout(function() {
+        $location.path('/menu');
+      }, 1500);
+    }
+  });
+
+
+  /*
+  * Get Training Module that has training module id
+  */
+  TrainingModule.getTrainingModule($routeParams.id).then(function(data) {
+    app.loading = true;
+    app.errorMsg = false;
+    app.successMsg = false;
+    // if module returned success
+    if(data.data.success) {
+      console.log(data);
+      app.loading = false;
+      // get generic training module info to display to user
+      app.title = data.data.trainingmodule.name;
+      app.author = data.data.trainingmodule.author[0].name;
+      app.lastEdit = new Date(data.data.trainingmodule.lastEdit).toDateString();
+
+      // get the list of components for training module
+      app.components = data.data.trainingmodule.components;
+
+      // set the page index to 0, always start on first component
+      app.page = 0;
+
+      // get the first training component from the training module
+      app.component = data.data.trainingmodule.components[app.page];
+
+      // if training component is a question, hide the next button
+      if(app.isQuestion(app.component)) {
+        app.hideNext = true;
+      }
+    }
+    // if error occurs, render error message and re-direct to menu
+    else {
+      app.loading = false;
+      app.errorMsg = data.data.message;
+      $timeout(function() {
+        $location.path('/menu');
+        $route.reload();
+      }, 2000);
+    }
+  });
+
 
 
   /*
@@ -17,6 +167,10 @@ angular.module('trainController', ['trainingServices'])
     else if(component.pageType == 'audio') {
       console.log('audio type detected');
       app.component.source = component.audio;
+    } 
+    else if(component.pageType == 'image') {
+      console.log('image type detected');
+      app.component.source = component.image;
     }
   }
 
@@ -24,7 +178,7 @@ angular.module('trainController', ['trainingServices'])
   * Is Media returns true if component contains video/audio sources
   */
   app.isMedia = function(component) {
-    if(component.pageType == 'video' || component.pageType == 'audio') {
+    if(component.pageType == 'video' || component.pageType == 'audio' || component.pageType == 'image') {
       return true;
     }
     return false;
@@ -71,52 +225,6 @@ angular.module('trainController', ['trainingServices'])
     }
     alert( (correct/count)*100 + '%' );
   }
-
-
-  // get list of training modules registered to current user
-  // display in drop down menu for selection ?
-  // when selected, submit the training module _id to server and return the training module
-
-  var training_id2 =  '58ed9857990c04dee6dbd859';
-  var training_id = '58ed986c990c04dee6dbd85a';
-
-  app.component = {};
-
-  // display training module to user
-  TrainingModule.getTrainingModule(training_id).then(function(data) {
-    // if data exists, bind to view
-    if(data) {
-      console.log(data);
-      // get generic training module info to display to user
-      app.title = data.data.trainingmodule.name;
-      app.author = data.data.trainingmodule.author[0].name;
-      app.lastEdit = new Date(data.data.trainingmodule.lastEdit).toDateString();
-
-      // get the list of components for training module
-      app.components = data.data.trainingmodule.components;
-
-      // set the page index to 0, always start on first component
-      app.page = 0;
-
-      // get the first training component from the training module
-      app.component = data.data.trainingmodule.components[app.page];
-
-      // if training component is a question, hide the next button
-      if(app.isQuestion(app.component)) {
-        app.hideNext = true;
-      }
-
-    }
-    // if error occurs, render error message and re-direct to menu
-    else {
-      app.title = 'An Error Occurred, Redirecting...';
-      $timeout(function() {
-        $location.path('/menu');
-        $route.reload();
-      }, 2000);
-    }
-  });
-
 
   /*
   * Next Page
@@ -173,7 +281,6 @@ angular.module('trainController', ['trainingServices'])
       console.log('an error occurred incrementing the page');
     }
   }
-
 
   /*
   * Previous Page function decrements app.page
@@ -232,18 +339,12 @@ angular.module('trainController', ['trainingServices'])
 
 
 
-  // allow user to complete training module
-
-  // on completion/validation, update trainingmodule and user models with the results
-
-  // return user to main menu
 
 
 })
 
 
-
-  .controller('assignTrainingCtrl', function(TrainingModule, User, $location, $scope, $timeout) {
+  .controller('assignTrainingCtrl', function(TrainingModule, User, $location, $timeout) {
 
   var app = this;
 
@@ -252,6 +353,9 @@ angular.module('trainController', ['trainingServices'])
   app.modules = undefined;
   app.users = undefined;
   app.submitDisabled = true;
+  app.successMsg = false;
+  app.errorMsg = false;
+  app.loading = false;
 
   var today = new Date();
   console.log(today.getMonth() + 1 + '/' + today.getDate() + '/' + today.getFullYear());
@@ -296,11 +400,14 @@ angular.module('trainController', ['trainingServices'])
 
   /*
   * Submit Assignment
-  *
+  * Adds Training Module to each user that has been selected for training
+  * Pushes training module onto assignments array of user schema
   */
   app.submitAssignment = function() {
     app.submitDisabled = true;
-
+    app.successMsg = false;
+    app.errorMsg = false;
+    app.loading = true;
     // for each user._id, push an assignment into their db
     // we will append the users array to the selectedModule data and send together
     var assignmentData = {};
@@ -309,14 +416,21 @@ angular.module('trainController', ['trainingServices'])
     // need module._id, module.title, and module.description
     TrainingModule.assignTraining(assignmentData).then(function(data) {
       if(data.data.success) {
-        console.log('training assignments have been completed, redrecting...');
+        app.loading = false;
+        app.successMsg = data.data.message;
+        console.log(data);
         $timeout(function() {
           $location.path('/menu');
         }, 2000);
       }
-
+      else {
+        app.loading = false;
+        app.errorMsg = data.data.message;
+        $timeout(function() {
+          $location.path('/menu');
+        }, 2000);
+      }
     });
-
   }
 
 
@@ -343,7 +457,7 @@ angular.module('trainController', ['trainingServices'])
   * Clear removes filter from results and clears 
   */
   app.clear = function() {
-    $scope.searchKeyword = undefined; // Clear the search word
+    app.searchKeyword = undefined; // Clear the search word
     app.searchFilter = undefined; // Clear the search filter
   };
 
@@ -352,8 +466,11 @@ angular.module('trainController', ['trainingServices'])
   * Get all available training modules
   */
   TrainingModule.getTrainingModules().then(function(data) {
+    app.loading = true;
+    app.errorMsg = false;
+    app.successMsg = false;
     // if training modules were found
-    if(data) {
+    if(data.data.success) {
       // bind module data to view
       app.modules = data.data.modules; 
       // format the date
@@ -361,14 +478,11 @@ angular.module('trainController', ['trainingServices'])
         var edit = new Date(app.modules[i].lastEdit);
         app.modules[i].lastEdit = (edit.getMonth()+1) + '/' + (edit.getDay()) + '/' + (edit.getFullYear());
       }
+      app.loading = false;
     }
-    // if error occurs, render error message and re-direct to menu
     else {
-      app.title = 'An Error Occurred, Redirecting...';
-      $timeout(function() {
-        $location.path('/menu');
-        $route.reload();
-      }, 2000);
+      app.loading = false;
+      app.errorMsg = data.data.message;
     }
   });
 
