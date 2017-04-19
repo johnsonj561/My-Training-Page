@@ -36,6 +36,14 @@
         <p> {{ training.component.description }} </p>
       </div>
 
+      <!-- Image Training Component -->
+      <div class="image-component" ng-show="training.component.pageType == 'image'">
+        <h3 class="text-center">{{ training.component.title }}</h3>
+        <div class="text-center"><img class="img-responsive text-center" ng-src="{{ training.component.source }}"/></div>
+        <p> {{ training.component.description }} </p>
+      </div>
+
+
       <!-- True/False Question -->
       <div class="true-false-component" ng-show="training.component.pageType == 'true-false'">
         <h3 class="text-center">{{ training.component.title }}</h3>
@@ -44,7 +52,6 @@
           <label><input type="radio" name="true-false" ng-model="training.submission" ng-value="$index"
                         ng-change="training.hideNext = false">{{ c.answer }}</label>
         </div>
-
       </div>
 
       <!-- Multiple Choice Question -->
@@ -53,7 +60,7 @@
         <p>{{ training.component.question }}</p>
         <div ng-repeat="c in training.component.answers" class="radio">
           <label><input type="radio" name="multiple-choice" ng-model="training.submission" ng-value="$index"
-                         ng-change="training.hideNext = false">{{ c.answer }}</label>
+                        ng-change="training.hideNext = false">{{ c.answer }}</label>
         </div>
       </div>
     </div>
