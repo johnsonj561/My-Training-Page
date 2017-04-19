@@ -157,9 +157,9 @@ var app = angular.module('appRoutes', ['ngRoute'])
     authenticated: true
   })
   
-  .when('/train', {
+  .when('/train/:id', {
     templateUrl: 'app/views/pages/training/train.html',
-    controller: 'trainCtrl',
+    controller: 'completeTrainingCtrl',
     controllerAs: 'training',
     authenticated: true
   })
