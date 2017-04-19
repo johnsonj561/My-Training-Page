@@ -26,10 +26,7 @@ var TrainingComponent = new Schema({
 */
 var TrainingModuleSchema = new Schema({
   name: { type: String, required: true },
-  author: {
-    _id: { type: Schema.Types.ObjectId, required: true },
-    name: {type: String, required: true }
-  },
+  author: { type: Array, required: true},
   lastEdit: { type : Date, required: true, default: Date.now },
   components: {type: Array, required: true },
   assignedCount: { type: Number, required: true, default: 0 },
