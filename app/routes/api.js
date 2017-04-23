@@ -108,9 +108,6 @@ module.exports = function(router) {
   * UPDATE USER PROFILE
   */
   router.post('/updateuser', function(req, res) {
-    console.log('in server');
-    console.log(req.body);
-    console.log('out server');
 
     var editUser = req.body._id; 
 
@@ -472,6 +469,7 @@ module.exports = function(router) {
   /* MIDDLEWARE */
 
   router.use(function(req, res, next) {
+    console.log('in middleware');
     var token = req.body.token || req.body.query || req.headers['x-access-token'];
     if(token) {
       jwt.verify(token, secret, function(err, decoded) {
@@ -803,7 +801,6 @@ module.exports = function(router) {
   * Get training module from db
   */
   router.get('/trainingmodule/:id', function(req, res) {
-
     TrainingModule.findOne({ _id: req.params.id }, function(err, trainingmodule) {
       if(err) throw err;
       if(!trainingmodule) {
@@ -821,7 +818,15 @@ module.exports = function(router) {
   * Get all training modules assigned to user with specified id
   */
   router.get('/usertraining/:id', function(req, res) {
-
+    User.find({ _id: req.params.id  }).select('assignments').exec(function(err, assignments) {
+      if(err) throw err;
+      if(!assignments) {
+        res.json({ success: false, message: 'No assignments were found for this user.' });
+      }
+      else {
+        res.json({ success: true, assignments: assignments });
+      }
+    });
 
   });
 
@@ -832,10 +837,10 @@ module.exports = function(router) {
     TrainingModule.find({}).select('name author description lastEdit').exec(function(err, modules) {
       if(err) throw err;
       if(!modules) {
-        res.json({ success: false, message: 'No training modules were found' });
+        res.json({ success: false, message: 'No training modules were found.' });
       }
       else {
-        res.json({ success: true, message: 'Training modules found', modules: modules });
+        res.json({ success: true, message: 'Training modules found.', modules: modules });
       } 
     });
   });
@@ -849,6 +854,7 @@ module.exports = function(router) {
 
     // for each user, update their assigments
     var users = req.body.selectedUsers;
+    console.log(users.length + " users selected");
 
     // build training module object to push into assignments object
     var module = {};
@@ -868,14 +874,105 @@ module.exports = function(router) {
         function(err, user) {
           if(err) throw err;
           if(!user) {
-            res.json({ success: false, message: 'User not found, unable to assign training module' });
+            res.json({ success: false, message: 'User not found, unable to assign training module. Redirecting to menu...' });
           }
         }
       )
     });
 
-    res.json({ success: true, message: 'Training Module Assignments Complete' });
+    // update the training module  by incrememnting the total assigned count
+    TrainingModule.findOne({_id: module._id}, function(err, updateModule) {
+      if(err) throw err;
+      if(!updateModule) {
+        res.json({ success: false, message: 'Unable to update training module, no training module found.'});
+      }
+      else {
+        updateModule.assignedCount = updateModule.assignedCount + users.length;
+        updateModule.save(function(err) {
+          if(err) throw err;
+          else {
+            // return success message
+            res.json({ success: true, message: 'Training Module Assignments Complete, Redirecting To Menu...'});
+          }
+        }); 
+      }
+    });
 
+  });
+
+  /*
+  * Store User Training Data
+  * Updates User Assignments with completed training module data
+  * If success, return the user's previous score, it will be needed to update training module
+  */
+  router.put('/storeusertrainingdata', function(req, res) {
+    var trainingData = req.body;
+
+    // update the user
+    User.findOneAndUpdate( 
+      {"_id" : trainingData.user, "assignments.module._id" : trainingData.module._id },
+      { "$set": 
+       {
+         "assignments.$.module.score": trainingData.module.score,
+         "assignments.$.module.completionDate": new Date().toISOString()
+         
+       }
+      },
+      function(err, user) {
+        if(err) throw err;    
+        if(!user) {
+          res.json({ success: false, message: 'No user found, unable to update training data for user.' });
+        }
+        // user found, update data
+        else {
+          console.log('user assignment found');
+          res.json({ success: true, message: 'User found', user: user });
+        } 
+      });
+  });
+
+
+  router.put('/updateScores', function(req, res) {
+    var module_id = req.body.module._id;
+    var newScore = req.body.module.score;
+    var scoreOffset = req.body.isRetake ? req.body.scoreDifference : req.body.module.score;
+    console.log('score difference is ' + scoreOffset);
+
+    TrainingModule.findOne({ _id: module_id }, function(err, module) {
+      if(err) throw err;
+      if(!module) {
+        res.json({ success: false, message: 'Unable to update Training Module with the new score results' });
+      }
+      // update the training module with new scores and return
+      else {
+        module.totalScores += scoreOffset;
+        // if this is first person to complete training module, initialize high/low scores
+        if(module.completedCount === 0) {
+          module.lowScore = newScore;
+          module.highScore = newScore;
+        }
+        // else compare high/low score and set as needed
+        else {
+          if(newScore < module.lowScore) {
+            module.lowScore = newScore;
+          }
+          else if(newScore > module.highScore) {
+            module.highScore = newScore;
+          }
+        }
+        // if it's first time completing course, incremement completed counter
+        if(!req.body.isRetake) {
+          module.completedCount++;
+        }
+        // save changes
+        module.save(function(err) {
+          if (err) throw err;
+          else {
+            res.json({ success: true, message: 'Training Module scores/stats updated successfully' });
+          }
+        });
+      }
+    });
   });
 
 
