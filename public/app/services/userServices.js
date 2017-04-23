@@ -89,7 +89,14 @@ angular.module('userServices', [])
   userFactory.getCurrentUser = function() {
     return $http.get('/api/getcurrent');
   };
-
+  
+  userFactory.storeTrainingScore = function(trainingData) {
+    return $http.put('/api/storeusertrainingdata', trainingData);
+  };
+  
+  userFactory.getScore = function(moduleId) {
+    return $http.post('api/getscore', moduleId);
+  }
 
 
 
