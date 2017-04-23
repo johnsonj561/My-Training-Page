@@ -1,6 +1,6 @@
 <!-- Header -->
 <div class="page-header">
-  <h1 class="text-center">Training Zone</h1>
+  <h1 class="text-center">Training Zone {{main.TRAINING_ASSIGNMENT_MESSAGE}}</h1>
 </div>
 <!-- Header -->
 
@@ -35,7 +35,7 @@
   <button type="button" ng-click="training.clear();" class="btn btn-default">Clear</button>
   <!-- Submit Assignment Button -->
   <button type="button" ng-click="training.toggleCompleted();" id="view-completed-btn" 
-          class="btn btn-default pull-right">View Completed</button>
+          class="btn btn-default pull-right">Hide Completed</button>
   
 </div>
 <!-- Simple Search Bar /-->
@@ -57,9 +57,12 @@
   <div class="training-preview-footer">
     <a class="btn btn-primary pull-right" href="/train/{{assignment.module._id}}">Start</a>
     <label ng-show="assignment.module.completionDate">Completed:</label>
-    <span ng-show="assignment.module.completionDate" class="completion-date">4/17/17</span>
+    <span ng-show="assignment.module.completionDate" class="completion-date">{{ assignment.module.completionDate }}</span>
     <label ng-show="assignment.module.score > -1">Score:</label>
-    <span ng-show="assignment.module.score > -1" class="training-preview-score text-success">{{ assignment.module.score }}</span>
+    <span ng-show="assignment.module.score > -1" class="training-preview-score"
+                                                        ng-class="{'text-success': assignment.module.score >= 90, 'text-primary': assignment.module.score < 90, 
+                                                                  'text-warning': assignment.module.score < 80,
+                                                                  'text-danger': assignment.module.score < 70 }">{{ assignment.module.score }}</span>
   </div>
 
 </div>
