@@ -22,8 +22,12 @@ angular.module('trainingServices', [])
   
   // assign training module to users
   trainingFactory.assignTraining = function(assignmentData) {
-    console.log('in training services');
     return $http.put('/api/assignTraining', assignmentData);
+  }
+  
+  // update the training module stats with new training scores
+  trainingFactory.updateScores = function(trainingData) {
+    return $http.put('/api/updateScores', trainingData);
   }
 
   return trainingFactory;
