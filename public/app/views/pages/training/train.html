@@ -6,8 +6,37 @@
   <h4 class="text-center">Last Updated: {{ training.lastEdit }}</h4>
 </div>
 
+<!-- Loading Icon -->
+<div class="jumbotron text-center" ng-show="training.loading">
+  <span class="glyphicon glyphicon-repeat spinner"></span>
+  <p>One moment while we grade your report...</p>
+</div>
+
+<!-- BootstrapJS Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" ng-click="training.returnToMenu();" class="close" data-dismiss="modal">&times;</button>
+        <!-- Modal Header -->
+        <h4 class="modal-title">{{ training.modalHeader }}</h4>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <p>{{ training.modalBody }}</p>
+      </div>
+      <div class="modal-footer">
+        <!-- Modal 'Menu' Button -->
+        <button type="button" ng-click="training.returnToMenu();" class="btn btn-primary" data-dismiss="modal">Menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- BootstrapJS Modal -->
+
 <!-- Display component of training module -->
-<div class="panel-group">
+<div ng-hide="training.loading" class="panel-group">
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h3 class="panel-title">Page {{ training.page + 1}} <span ng-show="training.component.title">: {{ training.component.title }}</span></h3>
