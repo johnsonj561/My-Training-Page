@@ -7,7 +7,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
   app.components = {};
   app.assignments = {};
   app.test = 'hello';
-  app.viewCompleted = false;
+  app.viewCompleted = true;
 
   /*
   * Get the Training Modules associated with current user
@@ -19,6 +19,13 @@ angular.module('trainController', ['trainingServices', 'userServices'])
       TrainingModule.getUserTraining(app.user._id).then(function(data) {
         if(data.data.success) {
           app.assignments = data.data.assignments[0].assignments;
+          // format the dates
+          for(var i = 0; i < app.assignments.length; i++) {
+            if(app.assignments[i].module.completionDate) {
+              var edit = new Date(app.assignments[i].module.completionDate);
+              app.assignments[i].module.completionDate = (edit.getMonth()+1) + '/' + (edit.getDate()) + '/' + (edit.getFullYear());
+            }
+          }
           if(app.assignments.length == 0) {
             app.errorMsg = "You don't have any training assignments to complete at this time.";  
           }
@@ -85,7 +92,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
 * Complete Training Controller
 * Controller that handles training course completion and grading
 */
-  .controller('completeTrainingCtrl', function(TrainingModule, User, $routeParams, $timeout) {
+  .controller('completeTrainingCtrl', function(TrainingModule, User, $location, $routeParams, $timeout) {
 
   var app = this;
 
@@ -94,6 +101,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
   app.successMsg = false;
   app.loading = false;
   app.user = {};
+  app.module = {};
 
   /*
   * Get the current user
@@ -121,9 +129,9 @@ angular.module('trainController', ['trainingServices', 'userServices'])
     app.successMsg = false;
     // if module returned success
     if(data.data.success) {
-      console.log(data);
       app.loading = false;
       // get generic training module info to display to user
+      app.module = data.data.trainingmodule;
       app.title = data.data.trainingmodule.name;
       app.author = data.data.trainingmodule.author[0].name;
       app.lastEdit = new Date(data.data.trainingmodule.lastEdit).toDateString();
@@ -154,6 +162,32 @@ angular.module('trainController', ['trainingServices', 'userServices'])
   });
 
 
+  /*
+  * Show Modal Function displays the training module score to the user
+  */
+  var showModal = function(score) {
+    // modal title
+    app.modalHeader = 'Training Module Complete!';
+    // build modal body based off score
+    if(score > 90) {
+      app.modalBody = 'Congratulations! You scored a ' + score + '%. Keep up the good work!';
+    }
+    else if(score > 75) {
+      app.modalBody = 'You scored a ' + score + '%. Feel free to re-test if you want to get a higher score.';
+    }
+    else {
+      app.modalBody = 'You finished the course, but only scored a ' + score + '%. You should try again.';
+    }
+    // display modal
+    $('#myModal').modal({ backdrop: 'static' });
+  }
+  /*
+  * Return to user menu
+  */
+  app.returnToMenu = function() {
+    $location.path('/menu');
+  }
+
 
   /*
   * Load Media
@@ -161,15 +195,12 @@ angular.module('trainController', ['trainingServices', 'userServices'])
   */
   app.loadMedia = function(component) {
     if(component.pageType == 'video') {
-      console.log('video type detected');
       app.component.source = component.video;
     }
     else if(component.pageType == 'audio') {
-      console.log('audio type detected');
       app.component.source = component.audio;
     } 
     else if(component.pageType == 'image') {
-      console.log('image type detected');
       app.component.source = component.image;
     }
   }
@@ -202,6 +233,8 @@ angular.module('trainController', ['trainingServices', 'userServices'])
   */
   app.gradeComponents = function(components) { 
 
+    app.loading = true;
+
     // make sure the last page's question has been saved before calculating
     if(app.isQuestion(app.component)) {
       // if a new submission was made
@@ -209,22 +242,124 @@ angular.module('trainController', ['trainingServices', 'userServices'])
         app.component.submission = app.submission;
       }
     }
-
     var count = 0;
     var correct = 0;
     for(var i = 0; i < components.length; i++) {
       // if the component is a question, process grade
       if(app.isQuestion(components[i])) {
         count++;
-        console.log('solution: ' + components[i].solution);
-        console.log('submission: ' + components[i].submission);
         if(components[i].solution === components[i].submission) {
           correct++;
         }
       }
     }
-    alert( (correct/count)*100 + '%' );
+
+    var score = (correct/count)*100;
+
+    // object that contains new data to update db
+    var trainingData = {};
+    trainingData.module = app.module;
+    trainingData.user = app.user._id;
+    trainingData.module.score = score;
+
+    /* 
+    * Update the user's assignments with new data
+    * First - get the  old assignment score, and if > -1, mark difference
+    * Then update user's corresponding assignment subdocument
+    * Then update the trainig module's stats
+    */
+    TrainingModule.getUserTraining(trainingData.user).then(function(data) {
+      // if user assignments were found, get assignment score and calculate score difference
+      if(data.data.success) {
+        var assignments = data.data.assignments[0].assignments;
+        var oldScore = findOldScore(assignments, trainingData.module._id);
+        trainingData.isRetake = false;
+        if(oldScore > -1) {
+          trainingData.scoreDifference = score - oldScore;
+          trainingData.isRetake = true;
+        }
+
+        // update user's assignment subdocument
+        updateUserAssignmentScore(trainingData);
+
+        // update training module with new scores
+        updateTrainingModuleData(trainingData);
+
+        // display score
+        showModal(score);
+
+      }
+      else {
+        console.log("error retrieving user's assignments");
+      }
+    });
   }
+
+
+  /*
+  * Traverses array of assignments and returns the score to assignment with ID
+  */
+  var findOldScore = function(assignments, module) {
+    for(var i = 0; i < assignments.length; i++) {
+      if(assignments[i].module._id == module) {
+        return assignments[i].module.score;
+      }
+    }
+    return null;
+  }
+
+
+  /* 
+  * Update training module data with new score
+  */
+  var updateTrainingModuleData = function(trainingData) {
+    TrainingModule.updateScores(trainingData).then(function(data) {
+      console.log('in update training module data');
+      if(data.data.success) {
+        console.log('training module updated: ' + data);
+      }
+      else {
+        console.log('Training module not updated with new scores, an error occurred');
+      }  
+    });
+  };
+
+
+  /*
+  * Update user's assignment subdocument with new score
+  */
+  var updateUserAssignmentScore = function(trainingData) {
+    // now we update database with trainingData
+    // update the user document
+    User.storeTrainingScore(trainingData).then(function(data) {
+      console.log('in store training scores');
+      if(data.data.success) {
+        console.log('user assignment score updated' + data);
+      }
+      else if(data == null) {
+        console.log('data is null');
+      }
+      else {
+        console.log('data is not null, but success = false');
+      }          
+    });
+  };
+
+
+  /*
+  * Update Training Module with new scores
+  */
+  var updateTrainingModuleData = function(trainingData) {
+    TrainingModule.updateScores(trainingData).then(function(data) {
+      if(data.data.success) {
+        console.log('update scores success' + data);
+      }
+      else {
+        console.log('error updating scores');
+      }
+    });
+  };
+
 
   /*
   * Next Page
@@ -240,11 +375,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
         if(app.isQuestion(app.component)) {
           // if a new submission was made
           if(app.submission !== app.component.submission) {
-            console.log('before changing page, storing: ' + app.submission);
             app.component.submission = app.submission;
-          }
-          else {
-            console.log('no change was made, no new value to store');
           }
 
           // setting app.submission to undefined before getting next page
@@ -294,12 +425,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
         if(app.isQuestion(app.component)) {
           // if a new submission was given
           if(app.submission !== app.component.submission) {
-            console.log('before changing page, storing: ' + app.submission);
             app.component.submission = app.submission;
-          }
-          // else if no new submission but an old answer exists
-          else {
-            console.log('no change was made, no new value to store');
           }
           // reset submission model before getting next component
           app.submission = undefined;
@@ -320,7 +446,6 @@ angular.module('trainController', ['trainingServices', 'userServices'])
         if(app.isQuestion(app.component)) {
           // if a submission is defined from previous view, restore it
           if(app.component.submission !== undefined) {
-            console.log('restoring value from memory: ' + app.component.submission);
             app.submission = app.component.submission;
           }
           // else no answer exists, hide next button
@@ -358,7 +483,6 @@ angular.module('trainController', ['trainingServices', 'userServices'])
   app.loading = false;
 
   var today = new Date();
-  console.log(today.getMonth() + 1 + '/' + today.getDate() + '/' + today.getFullYear());
 
 
   /*
@@ -399,7 +523,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
   };
 
   /*
-  * Submit Assignment
+  * Submit Training Assignment
   * Adds Training Module to each user that has been selected for training
   * Pushes training module onto assignments array of user schema
   */
@@ -476,7 +600,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
       // format the date
       for(var i = 0; i < app.modules.length; i++) {
         var edit = new Date(app.modules[i].lastEdit);
-        app.modules[i].lastEdit = (edit.getMonth()+1) + '/' + (edit.getDay()) + '/' + (edit.getFullYear());
+        app.modules[i].lastEdit = (edit.getMonth()+1) + '/' + (edit.getDate()) + '/' + (edit.getFullYear());
       }
       app.loading = false;
     }
