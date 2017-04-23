@@ -6,7 +6,7 @@ angular.module('mainController', ['authServices', 'userServices'])
 
   const TOKEN_EXPIRED_MODAL = 1;
   const PROMPT_LOGOUT_MODAL = 2;
-  const TRAINING_ASSIGNMENT_MESSAGE =  3;
+  const TRAINING_SCORE =  3;
   // web site will warn user when app has 5 minutes until expiration
   const SESSION_EXPIRE_WARNING_TIME = 60*5;
 
@@ -49,7 +49,7 @@ angular.module('mainController', ['authServices', 'userServices'])
 
   app.checkSession();
 
-  var showModal = function(option) {
+  var showModal = function(option, score) {
     app.choiceMade = false;
     app.modalHeader = undefined;
     app.modalBody = undefined;
@@ -72,9 +72,19 @@ angular.module('mainController', ['authServices', 'userServices'])
         $route.reload();
       }, 1000);
     }
-    else if(option === TRAINING_ASSIGNMENT_MESSAGE) {
-      app.modalHeader = 'Training Modules Assigned';
-      app.modalBody = 'All training module assignments have been assigned.';
+    else if(option === TRAINING_SCORE) {
+      app.hideButton = true;
+      app.showCloseButton = true;
+      app.modalHeader = 'Training Module Complete!';
+      if(score > 90) {
+        app.modalBody = 'Congratulations! You scored a ' + score + '. Keep up the good work!';
+      }
+      else if(score > 75) {
+        app.modalBody = 'You scored a ' + score + '. Feel free to re-test if you want to get a higher score.';
+      }
+      else {
+        app.modalBody = 'You finished the course, but only scored a ' + score + '. You should try again';
+      }
       $('#myModal').modal({ backdrop: 'static' });
       $timeout(function() {
         $location.path('/menu'); // Change route to clear user object
@@ -85,7 +95,7 @@ angular.module('mainController', ['authServices', 'userServices'])
 
     // if no choice is made after 10 seconds, then log user out
     $timeout(function() {
-      if(!app.choiceMade) {
+      if(!app.choiceMade && option === PROMPT_LOGOUT_MODAL) {
         Auth.logout(); // Logout user
         $location.path('/'); // Change route to clear user object
         hideModal();
@@ -93,7 +103,6 @@ angular.module('mainController', ['authServices', 'userServices'])
       }
     }, 10000);
   };
-
 
   app.renewSession = function() {
     app.choiceMade = true;
