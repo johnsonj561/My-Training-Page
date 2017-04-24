@@ -152,8 +152,6 @@ angular.module('userControllers', ['userServices'])
     app.errorMsg = false;
     app.successMsg = false;
     app.disabled = true;
-    console.log('in useCtrl');
-    console.log(passwordData);
     
     // if front end was valid and user is defined
     if(valid) {
