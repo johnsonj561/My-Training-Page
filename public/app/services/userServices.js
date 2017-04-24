@@ -97,8 +97,10 @@ angular.module('userServices', [])
   userFactory.getScore = function(moduleId) {
     return $http.post('api/getscore', moduleId);
   }
-
-
+  
+  userFactory.getCompletionRate = function() {
+    return $http.get('api/usercompletionrate');
+  }
 
   return userFactory;
 });
