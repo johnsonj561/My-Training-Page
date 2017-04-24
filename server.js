@@ -44,13 +44,16 @@ app.use(express.static(__dirname + '/public'));
 app.use('/api', appRoutes);
 
 
-
 /*
 * mongoose
-* 
 * http://mongoosejs.com/index.html
 */
-mongoose.connect('mongodb://localhost:27017/tutorial', function(err) {
+var uri  = 'mongodb://localhost:27017/mytrainingpage';
+var options = {
+  user: 'xxx',
+  pass: 'xxx'
+}
+mongoose.connect(uri, options,  function(err) {
   if(err) {
     console.log("Not connected to the database: " + err);
   }
