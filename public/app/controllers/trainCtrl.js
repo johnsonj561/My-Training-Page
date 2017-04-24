@@ -1,6 +1,6 @@
-angular.module('trainController', ['trainingServices', 'userServices'])
+angular.module('trainController', ['trainingServices', 'userServices', 'ngSanitize'])
 
-  .controller('trainCtrl', function(TrainingModule, $location, User) {
+  .controller('trainCtrl', function(TrainingModule, $location, User, $sce) {
 
   var app = this;  
   app.user = {};
@@ -145,6 +145,11 @@ angular.module('trainController', ['trainingServices', 'userServices'])
       // get the first training component from the training module
       app.component = data.data.trainingmodule.components[app.page];
 
+      // check for media file and load source
+      if(app.isMedia(app.component)) {
+        app.loadMedia(app.component);
+      }
+
       // if training component is a question, hide the next button
       if(app.isQuestion(app.component)) {
         app.hideNext = true;
@@ -176,7 +181,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
       app.modalBody = 'You scored a ' + score + '%. Feel free to re-test if you want to get a higher score.';
     }
     else {
-      app.modalBody = 'You finished the course, but only scored a ' + score + '%. You should try again.';
+      app.modalBody = 'You finished the course, but only scored a ' + score + '%. You should consider trying again.';
     }
     // display modal
     $('#myModal').modal({ backdrop: 'static' });
@@ -209,7 +214,8 @@ angular.module('trainController', ['trainingServices', 'userServices'])
   * Is Media returns true if component contains video/audio sources
   */
   app.isMedia = function(component) {
-    if(component.pageType == 'video' || component.pageType == 'audio' || component.pageType == 'image') {
+    if(component.pageType == 'video' || 
+       component.pageType == 'audio' || component.pageType == 'image') {
       return true;
     }
     return false;
@@ -223,8 +229,16 @@ angular.module('trainController', ['trainingServices', 'userServices'])
       return true;
     }
     return false;
-  }
+  };
 
+  app.pauseMedia = function(component) {
+    if(component.pageType == 'video') {
+      document.getElementById('video-component').pause();
+    }
+    else if(component.pageType == 'audio') {
+      document.getElementById('audio-component').pause();
+    }
+  };
 
   /*
   * Grade Components
@@ -254,7 +268,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
       }
     }
 
-    var score = (correct/count)*100;
+    var score = Math.ceil(((correct/count)*100));
 
     // object that contains new data to update db
     var trainingData = {};
@@ -289,11 +303,8 @@ angular.module('trainController', ['trainingServices', 'userServices'])
         showModal(score);
 
       }
-      else {
-        console.log("error retrieving user's assignments");
-      }
     });
-  }
+  };
 
 
   /*
@@ -306,7 +317,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
       }
     }
     return null;
-  }
+  };
 
 
   /* 
@@ -314,9 +325,8 @@ angular.module('trainController', ['trainingServices', 'userServices'])
   */
   var updateTrainingModuleData = function(trainingData) {
     TrainingModule.updateScores(trainingData).then(function(data) {
-      console.log('in update training module data');
       if(data.data.success) {
-        console.log('training module updated: ' + data);
+        console.log('training module updated');
       }
       else {
         console.log('Training module not updated with new scores, an error occurred');
@@ -332,15 +342,11 @@ angular.module('trainController', ['trainingServices', 'userServices'])
     // now we update database with trainingData
     // update the user document
     User.storeTrainingScore(trainingData).then(function(data) {
-      console.log('in store training scores');
       if(data.data.success) {
-        console.log('user assignment score updated' + data);
-      }
-      else if(data == null) {
-        console.log('data is null');
+        console.log('user assignment score updated');
       }
       else {
-        console.log('data is not null, but success = false');
+        console.log('unable to update user\'s assignment score');
       }          
     });
   };
@@ -381,6 +387,10 @@ angular.module('trainController', ['trainingServices', 'userServices'])
           // setting app.submission to undefined before getting next page
           app.submission = undefined;
         }
+        // else if current component is audio/video, pause it before changing page
+        else if(app.isMedia(app.component)) {
+          app.pauseMedia(app.component);
+        }
 
         // get next component from components array
         app.page += 1;
@@ -397,7 +407,6 @@ angular.module('trainController', ['trainingServices', 'userServices'])
         if(app.isQuestion(app.component)) {
           // if a submission is defined from previous view, restore it
           if(app.component.submission !== undefined) {
-            console.log('restoring value from memory: ' + app.component.submission);
             app.submission = app.component.submission;
           }
           // else no answer exists, hide next button
@@ -407,11 +416,7 @@ angular.module('trainController', ['trainingServices', 'userServices'])
         }
       }
     }
-    // else page is not defined we have an error
-    else {
-      console.log('an error occurred incrementing the page');
-    }
-  }
+  };
 
   /*
   * Previous Page function decrements app.page
@@ -456,16 +461,9 @@ angular.module('trainController', ['trainingServices', 'userServices'])
         }
       }
     }
-    // else page is not defined we have an error
-    else {
-      console.log('an error occurred decrementing the page');
-    }
-  }
+  };
 
-
-
-
-
+  
 })
 
 
@@ -542,7 +540,6 @@ angular.module('trainController', ['trainingServices', 'userServices'])
       if(data.data.success) {
         app.loading = false;
         app.successMsg = data.data.message;
-        console.log(data);
         $timeout(function() {
           $location.path('/menu');
         }, 2000);
