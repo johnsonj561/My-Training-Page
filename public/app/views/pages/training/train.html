@@ -46,22 +46,22 @@
       <!-- Text Training Component -->
       <div class="text-component" ng-show="training.component.pageType == 'text'">
         <h3 class="text-center">{{ training.component.title }}</h3>
-        <p>{{ training.component.body }}</p>
+        <p ng-bind-html="training.component.body"></p>
       </div>
 
       <!-- Audio Training Component -->
       <div class="audio-component" ng-show="training.component.pageType == 'audio'">
         <h3 class="text-center">{{ training.component.title }}</h3>
-        <p class="media-instructions text-center">Please listen to the entire audio file before proceeding</p>
-        <div class="text-center"><audio ng-src="{{ training.component.source }}" audioplayer controls></audio></div>
+        <p class="media-instructions text-center">Please listen to the entire audio file before proceeding.</p>
+        <div class="text-center"><audio id="audio-component" ng-src="{{ training.component.source }}" audioplayer controls></audio></div>
         <p> {{ training.component.description }} </p>
       </div>
 
       <!-- Video Training Component -->
       <div class="video-component" ng-show="training.component.pageType == 'video'">
         <h3 class="text-center">{{ training.component.title }}</h3>
-        <p class="media-instructions text-center">Please watch the entire video before proceeding</p>
-        <div class="text-center"><video ng-src="{{ training.component.source }}" controls></video></div>
+        <p class="media-instructions text-center">Please watch the entire video before proceeding.</p>
+        <div class="text-center"><video id="video-component" ng-src="{{ training.component.source }}" controls></video></div>
         <p> {{ training.component.description }} </p>
       </div>
 
