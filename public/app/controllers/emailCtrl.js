@@ -8,7 +8,6 @@ angular.module('emailController', ['userServices'])
   // Check function that grabs token from URL and checks database runs on page load
   User.activateAccount($routeParams.token).then(function(data) {
     app.errorMsg = false; // Clear errorMsg each time user submits
-
     // Check if activation was successful or not
     if (data.data.success) {
       app.successMsg = data.data.message + '...Redirecting'; // If successful, grab message from JSON object and redirect to login page
@@ -42,7 +41,6 @@ angular.module('emailController', ['userServices'])
       if (data.data.success) {
         // Custom function that sends activation link
         User.resendLink(app.loginData).then(function(data) {
-          console.log(data);
           // Check if sending of link is successful
           if (data.data.success) {
             app.successMsg = data.data.message; // If successful, grab message from JSON object
