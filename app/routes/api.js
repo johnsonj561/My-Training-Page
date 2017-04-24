@@ -11,9 +11,9 @@ module.exports = function(router) {
 
 
   /*
-* Sendgrid email service
-* https://sendgrid.com/blog/sending-email-nodemailer-sendgrid/
-*/
+  * Sendgrid email service
+  * https://sendgrid.com/blog/sending-email-nodemailer-sendgrid/
+  */
   var options = {
     auth: {
       api_user: 'xxx',
@@ -25,9 +25,8 @@ module.exports = function(router) {
 
 
   /*
-  * REGISTER ROUTE
+  * Register User
   * validates new user information and stores in mongodb
-  * http://localhost:3000/api/users
   */
   router.post('/users', function(req, res) {
     var user = new User();
@@ -66,7 +65,7 @@ module.exports = function(router) {
           }
           else if(err) {
             if(err.code == 11000) {
-              res.json({ success: false, message: "Username or Email already exists." });
+              res.json({ success: false, message: "Username or email already exists" });
             }
             else{
               res.json({ success: false, message: err });
@@ -77,15 +76,15 @@ module.exports = function(router) {
         else{
 
           var email = {
-            from: 'Localhost Staff, staff@localhost.com',
+            from: 'My Training Page Staff, staff@mytrainingpage.com',
             to: user.email,
             subject: 'Hello From MyTrainingPage',
-            text: 'Hello ' + user.name + ', Thank you for registering at localhost.com' +
+            text: 'Hello ' + user.name + ', Thank you for registering at My Training Page' +
             ' Please click on the link below to complete your activation: <a href="http://localhost:3000/activate/' 
             + user.temporarytoken,
-            html: 'Hello <strong>' + user.name + ',</strong><br><br>Thank you for registering at localhost.com<br>' +
+            html: 'Hello <strong>' + user.name + ',</strong><br><br>Thank you for registering at My Training Page<br>' +
             ' Please click on the link below to complete your activation: <br><br><a href="http://localhost:3000/activate/' 
-            + user.temporarytoken + '">' + 'htp://localhost:3000/activate'
+            + user.temporarytoken + '">' + 'Activate Account</a>'
           };
 
           client.sendMail(email, function(err, info){
@@ -105,7 +104,7 @@ module.exports = function(router) {
 
 
   /*
-  * UPDATE USER PROFILE
+  * Update User Profile
   */
   router.post('/updateuser', function(req, res) {
 
@@ -139,7 +138,7 @@ module.exports = function(router) {
 
 
   /*
-  * UPDATE PASSWORD
+  * Update Password
   */
   router.post('/updatepassword', function(req, res) {
     console.log('in server');
@@ -158,7 +157,6 @@ module.exports = function(router) {
         user.password = req.body.password;
         user.save(function(err) {
           if(err) {
-            console.log('error saving user in updatepassword route');
             throw err;
           }
           else {
@@ -170,10 +168,9 @@ module.exports = function(router) {
   });
 
 
-  /*
-  * LOGIN ROUTE
-  * validates login info
-  * http://localhost:3000/api/authenticate
+/*
+  * Login User
+  * Validates login info and creates session
   */
   router.post('/authenticate', function(req, res) {
     User.findOne({ username: req.body.username }).select('email username password active').exec(function(err, user) {
@@ -187,35 +184,34 @@ module.exports = function(router) {
 
         if(req.body.password) {   // password is not empty
           var validPassword = user.comparePassword(req.body.password);
+          if(!validPassword) {    // password does not match
+            res.json({ success: false, message: 'Could not authenticate password' });
+          }
+          else if(!user.active) {
+            res.json({ success: false, message: 'Account is not yet activated. Please check email for activation link.', expired: true });
+          }
+          else {    // password does match
+            // json web token stores session when user logs in
+            // expiration 60 * 60 = 1 hour
+            var token = jwt.sign({ username: user.username, email: user.email }, 
+                                 secret, { expiresIn: '1h' });
+            res.json({ success: true, message: 'User Authenticated', token: token});
+          }
         }
         else {
           res.json({ success: false, message: 'No password provided' });  
-        }
-        if(!validPassword) {    // password does not match
-          res.json({ success: false, message: 'Could not authenticate password' });
-        }
-        else if(!user.active) {
-          res.json({ success: false, message: 'Account is not yet activated. Please check email for activation link.', expired: true });
-        }
-        else {    // password does match
-          // json web token stores session when user logs in
-          // expiration 60 * 60 = 1 hour
-          var token = jwt.sign({ username: user.username, email: user.email }, 
-                               secret, { expiresIn: '1h' });
-          res.json({ success: true, message: 'User Authenticated', token: token});
         }
       }
     });
   });
 
   /*
-  * CHECK USERNAME
-  * validates username
+  * Check Username
+  * Returns true if username is valid (does not already exist)
   */
   router.post('/checkusername', function(req, res) {
     User.findOne({ username: req.body.username }).select('username').exec(function(err, user) {
       if(err) throw err;
-
       if(user) {
         res.json({ success: false, message: 'That username is already taken' });
       }
@@ -226,8 +222,8 @@ module.exports = function(router) {
   });
 
   /*
-  * CHECK EMAIL
-  * validates email
+  * Check Email
+  * Returns true if email is valid (does noe already exist)
   */
   router.post('/checkemail', function(req, res) {
     User.findOne({ email: req.body.email }).select('email').exec(function(err, user) {
@@ -244,13 +240,13 @@ module.exports = function(router) {
 
 
   /*
-  * ACTIVATION ROUTE
+  * Activate Account
+  * 
   */
   router.put('/activate/:token', function(req, res) {
     User.findOne({ temporarytoken: req.params.token }, function(err, user) {
       if (err) throw err; // Throw error if cannot login
       var token = req.params.token; // Save the token from URL for verification 
-
       // Function to verify the user's token
       jwt.verify(token, secret, function(err, decoded) {
         if (err) {
@@ -267,13 +263,12 @@ module.exports = function(router) {
             } else {
               // If save succeeds, create e-mail object
               var email = {
-                from: 'Localhost Staff, staff@localhost.com',
+                from: 'My Training Page Staff, staff@mytrainingpage.com',
                 to: user.email,
-                subject: 'Localhost Account Activated',
+                subject: 'My Training Page Account Activated',
                 text: 'Hello ' + user.name + ', Your account has been successfully activated!',
                 html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Your account has been successfully activated!'
               };
-
               // Send e-mail object to user
               client.sendMail(email, function(err, info) {
                 if (err) console.log(err); // If unable to send e-mail, log error info to console/terminal
@@ -288,15 +283,12 @@ module.exports = function(router) {
 
 
   /*
-  * RESEND ROUTE
-  * validates login info
-  * http://localhost:3000/api/authenticate
-  */
-  // Route to verify user credentials before re-sending a new activation link	
+  * Resend Activation Verification
+  * Verifies user credentials before re-sending activation link
+  */	
   router.post('/resend', function(req, res) {
     User.findOne({ username: req.body.username }).select('username password active').exec(function(err, user) {
       if (err) throw err; // Throw error if cannot connect
-
       // Check if username is found in database
       if (!user) {
         res.json({ success: false, message: 'Could not authenticate user' }); // Username does not match username found in database
@@ -318,7 +310,10 @@ module.exports = function(router) {
     });
   });
 
-  // Route to send user a new activation link once credentials have been verified
+  /*
+  * Resent Activation Link
+  * Sends user new email with account activation link
+  */
   router.put('/resend', function(req, res) {
     User.findOne({ username: req.body.username }).select('username name email temporarytoken').exec(function(err, user) {
       if (err) throw err; // Throw error if cannot connect
@@ -330,11 +325,11 @@ module.exports = function(router) {
         } else {
           // If user successfully saved to database, create e-mail object
           var email = {
-            from: 'Localhost Staff, staff@localhost.com',
+            from: 'My Training Page Staff, staff@mytrainingpage.com',
             to: user.email,
-            subject: 'Localhost Activation Link Request',
+            subject: 'My Training Page Activation Request',
             text: 'Hello ' + user.name + ', You recently requested a new account activation link. Please click on the following link to complete your activation: http://localhost:3000/activate/' + user.temporarytoken,
-            html: 'Hello<strong> ' + user.name + '</strong>,<br><br>You recently requested a new account activation link. Please click on the link below to complete your activation:<br><br><a href="http://localhost:3000/activate/' + user.temporarytoken + '">http://localhost:3000/activate/</a>'
+            html: 'Hello<strong> ' + user.name + '</strong>,<br><br>You recently requested a new account activation link. Please click on the link below to complete your activation:<br><br><a href="http://localhost:3000/activate/' + user.temporarytoken + '">ACTIVATE ACCOUNT</a>'
           };
 
           // Function to send e-mail to user
@@ -349,7 +344,10 @@ module.exports = function(router) {
 
 
 
-  // Route to send user's username to e-mail
+  /*
+  * Reset Username Request
+  * Sends user email with username
+  */
   router.get('/resetusername/:email', function(req, res) {
     User.findOne({ email: req.params.email }).select('email name username').exec(function(err, user) {
       if (err) {
@@ -360,27 +358,29 @@ module.exports = function(router) {
         } else {
           // If e-mail found in database, create e-mail object
           var email = {
-            from: 'Localhost Staff, staff@localhost.com',
+            from: 'My Training Page Staff, staff@mytrainingpage.com',
             to: user.email,
-            subject: 'Localhost Username Request',
+            subject: 'My Training Page Username Request',
             text: 'Hello ' + user.name + ', You recently requested your username. Please save it in your files: ' + user.username,
             html: 'Hello<strong> ' + user.name + '</strong>,<br><br>You recently requested your username. Please save it in your files: ' + user.username
           };
-
           // Function to send e-mail to user
           client.sendMail(email, function(err, info) {
             if (err) console.log(err); // If error in sending e-mail, log to console/terminal
           });
-          res.json({ success: true, message: 'Username has been sent to e-mail! ' }); // Return success message once e-mail has been sent
+          res.json({ success: true, message: 'Your username has been sent to the email address on file' });
         }
       }
     });
   });
 
-  // Route to send reset link to the user
+  /*
+  * Reset Password Request
+  * Sends email to user with reset password link
+  */
   router.put('/resetpassword', function(req, res) {
     User.findOne({ username: req.body.username }).select('username active email resettoken name').exec(function(err, user) {
-      if (err) throw err; // Throw error if cannot connect
+      if (err) throw err;
       if (!user) {
         res.json({ success: false, message: 'Username was not found' }); // Return error if username is not found in database
       } else if (!user.active) {
@@ -398,20 +398,22 @@ module.exports = function(router) {
               to: user.email,
               subject: 'Localhost Reset Password Request',
               text: 'Hello ' + user.name + ', You recently request a password reset link. Please click on the link below to reset your password:<br><br><a href="http://localhost:3000/reset/' + user.resettoken,
-              html: 'Hello<strong> ' + user.name + '</strong>,<br><br>You recently request a password reset link. Please click on the link below to reset your password:<br><br><a href="http://localhost:3000/reset/' + user.resettoken + '">http://localhost:3000/reset/</a>'
+              html: 'Hello<strong> ' + user.name + '</strong>,<br><br>You recently request a password reset link. Please click on the link below to reset your password:<br><br><a href="http://localhost:3000/reset/' + user.resettoken + '">RESET PASSWORD</a>'
             };
             // Function to send e-mail to the user
             client.sendMail(email, function(err, info) {
               if (err) console.log(err); // If error with sending e-mail, log to console/terminal
             });
-            res.json({ success: true, message: 'Please check your e-mail for password reset link' }); // Return success message
+            res.json({ success: true, message: 'Please check your e-mail for password reset link' });
           }
         });
       }
     });
   });
 
-  // Route to verify user's e-mail activation link
+  /*
+  * Reset Password Link 
+  */
   router.get('/resetpassword/:token', function(req, res) {
     User.findOne({ resettoken: req.params.token }).select().exec(function(err, user) {
       if (err) throw err; // Throw err if cannot connect
@@ -431,7 +433,9 @@ module.exports = function(router) {
     });
   });
 
-  // Save user's new password to database
+  /*
+  * Save Password
+  */
   router.put('/savepassword', function(req, res) {
     User.findOne({ username: req.body.username }).select('username email name password resettoken').exec(function(err, user) {
       if (err) throw err; // Throw error if cannot connect
@@ -466,10 +470,11 @@ module.exports = function(router) {
 
 
 
-  /* MIDDLEWARE */
-
+  /*
+  * MIDDLEWARE
+  * Checks for valid token before proceeding
+  */
   router.use(function(req, res, next) {
-    console.log('in middleware');
     var token = req.body.token || req.body.query || req.headers['x-access-token'];
     if(token) {
       jwt.verify(token, secret, function(err, decoded) {
@@ -488,10 +493,17 @@ module.exports = function(router) {
   });
 
 
+  /*
+  * Returns decoded request
+  */
   router.post('/me', function(req, res) {
     res.send(req.decoded);
   });
 
+  /*
+  * Renew Token
+  * Renews user token for 24 hours
+  */
   router.get('/renewToken/:username', function(req, res) {
     User.findOne({ username: req.params.username }).select().exec(function(err, user) {
       if(err) throw err;
@@ -506,7 +518,10 @@ module.exports = function(router) {
 
   });
 
-
+  /*
+  * Get Permission
+  * Returns current user's permission
+  */
   router.get('/permission', function(req, res) {
     User.findOne({ username: req.decoded.username }, function(err, user) {
       if(err) throw err;
@@ -520,6 +535,10 @@ module.exports = function(router) {
 
   });
 
+  /*
+  * Management
+  * Returns list of all users and the current users permission
+  */
   router.get('/management', function(req, res) {
     User.find({}, function(err, users) {
       if(err) throw err;
@@ -534,7 +553,6 @@ module.exports = function(router) {
               res.json({ message: false, message: 'Users not found' });
             }
             else{
-              console.log('/api/management/ success, users found');
               res.json({ success: true, users: users, permission: mainUser.permission });  
             }
           }
@@ -568,7 +586,9 @@ module.exports = function(router) {
 
   });
 
-
+  /*
+  * Delete User with specified username from db
+  */
   router.delete('/management/:username', function(req, res) {
     var deletedUser = req.params.username;
     User.findOne({ username: req.decoded.username }, function(err, mainUser) {
@@ -590,7 +610,10 @@ module.exports = function(router) {
     });
   });
 
-
+  /* 
+  * Edit user with specified ID
+  * Verifies current user's permissions first
+  */
   router.get('/edit/:id', function(req, res) {
     var editUser = req.params.id;
     User.findOne({ username: req.decoded.username }, function(err, mainUser) {
@@ -617,6 +640,9 @@ module.exports = function(router) {
     });
   });
 
+  /*
+  * Get current user profile
+  */
   router.get('/getcurrent', function(req, res) {
     User.findOne({ username: req.decoded.username }, function(err, user) {
       if(err) throw err;
@@ -624,14 +650,16 @@ module.exports = function(router) {
         res.json({ success: false, message: 'No user found' });
       }
       else {
-
         res.json({ success: true, message: 'User found', user: user });
       }
     })
   });
 
 
-  // Route to update/edit a user
+  /*
+  * Edit User
+  * Updates db with user's new information
+  */
   router.put('/edit', function(req, res) {
     var editUser = req.body._id; // Assign _id from user to be editted to a variable
     if (req.body.name) var newName = req.body.name; // Check if a change to name was requested
@@ -798,7 +826,8 @@ module.exports = function(router) {
 
 
   /*
-  * Get training module from db
+  * Get Training Module
+  * Returns training module with specified id
   */
   router.get('/trainingmodule/:id', function(req, res) {
     TrainingModule.findOne({ _id: req.params.id }, function(err, trainingmodule) {
@@ -815,7 +844,8 @@ module.exports = function(router) {
 
 
   /*
-  * Get all training modules assigned to user with specified id
+  * Get User Training
+  * Returns all training modules assigned to user with specified id
   */
   router.get('/usertraining/:id', function(req, res) {
     User.find({ _id: req.params.id  }).select('assignments').exec(function(err, assignments) {
@@ -831,7 +861,8 @@ module.exports = function(router) {
   });
 
   /*
-  * Get all available training module information for assignment page
+  * Get All Training
+  * Returns all available training modules to populate assignment page
   */
   router.get('/alltraining', function(req, res) {
     TrainingModule.find({}).select('name author description lastEdit').exec(function(err, modules) {
@@ -848,14 +879,11 @@ module.exports = function(router) {
 
   /*
   * Assign Training Modules
-  * Pushes training module assignment into all user profiles where does not exist
+  * Adds the specified training module to select users
   */
   router.put('/assignTraining', function(req, res) {
-
     // for each user, update their assigments
     var users = req.body.selectedUsers;
-    console.log(users.length + " users selected");
-
     // build training module object to push into assignments object
     var module = {};
     module._id = req.body.selectedModule._id;
@@ -864,7 +892,6 @@ module.exports = function(router) {
     module.score = -1;
     var date = new Date();
     module.assignedDate = (date.getMonth() + 1) + '/' + (date.getDate()) + '/' + (date.getFullYear());
-
     // for each user, push training module into assignments array
     users.forEach(function(user) {
       User.findByIdAndUpdate(
@@ -897,7 +924,6 @@ module.exports = function(router) {
         }); 
       }
     });
-
   });
 
   /*
@@ -907,7 +933,6 @@ module.exports = function(router) {
   */
   router.put('/storeusertrainingdata', function(req, res) {
     var trainingData = req.body;
-
     // update the user
     User.findOneAndUpdate( 
       {"_id" : trainingData.user, "assignments.module._id" : trainingData.module._id },
@@ -915,7 +940,6 @@ module.exports = function(router) {
        {
          "assignments.$.module.score": trainingData.module.score,
          "assignments.$.module.completionDate": new Date().toISOString()
-         
        }
       },
       function(err, user) {
@@ -925,19 +949,19 @@ module.exports = function(router) {
         }
         // user found, update data
         else {
-          console.log('user assignment found');
           res.json({ success: true, message: 'User found', user: user });
         } 
       });
   });
 
-
+  /*
+  * Update Scores
+  * Updates user's assignment data to reflect changes in training module score
+  */
   router.put('/updateScores', function(req, res) {
     var module_id = req.body.module._id;
     var newScore = req.body.module.score;
     var scoreOffset = req.body.isRetake ? req.body.scoreDifference : req.body.module.score;
-    console.log('score difference is ' + scoreOffset);
-
     TrainingModule.findOne({ _id: module_id }, function(err, module) {
       if(err) throw err;
       if(!module) {
@@ -974,6 +998,70 @@ module.exports = function(router) {
       }
     });
   });
+  
+  
+  /*
+  * Get User Completion Rate
+  * Calculates percentage of how many training modules have been completed by user
+  */
+  router.get('/usercompletionrate', function(req, res) {
+    User.findOne({ username: req.decoded.username }, function(err, user) {
+      if(err) throw err;
+      if(!user) {
+        res.json({ success: false, message: 'No user found' });
+      }
+      else {
+        var assignedCount = user.assignments.length;
+        var completedCount = 0;
+        for(var i = 0; i < user.assignments.length; i++) {
+          if(user.assignments[i].module.score > -1) {
+            completedCount++;
+          }
+        }
+        var result = Math.ceil((completedCount/assignedCount)*100);
+        res.json({ success: true, completionRate: result });
+      }
+      
+    });
+  });
+  
+  
+  /*
+  * Management
+  * Returns list of all users and the current users permission
+  */
+  router.get('/management', function(req, res) {
+    User.find({}, function(err, users) {
+      if(err) throw err;
+      User.findOne({ username: req.decoded.username }, function(err, mainUser) {
+        if(err) throw err;
+        if(!mainUser) {
+          res.json({ success: false, message: 'No user found' });  
+        }
+        else{
+          if(mainUser.permission === 'admin') {
+            if(!users) {
+              res.json({ message: false, message: 'Users not found' });
+            }
+            else{
+              res.json({ success: true, users: users, permission: mainUser.permission });  
+            }
+          }
+          else {
+            res.json({ success: false, message: 'Insufficient Permissions' });  
+          }
+        }
+      })
+
+    });
+  });
+
+  
+  
+  
+  
+  
+  
 
 
 
