@@ -11,10 +11,13 @@
 <div>
   <label>Your Training Progress</label>
   <div class="progress" ng-show="menu.displayProgressBar;">
-    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"> 60%
+    <div ng-class="{'progress-bar-success': menu.completionRate >= 90, 'progress-bar-info': menu.completionRate < 90, 'progress-bar-warning': menu.completionRate < 80,
+                   'progress-bar-danger': menu.completionRate < 70}"
+         class="progress-bar" role="progressbar" aria-valuenow="menu.completionRate" aria-valuemin="0" aria-valuemax="100"> {{ menu.completionRate }}%
     </div>
   </div>
 </div>
+<p class="progress-bar-message text-center">{{ menu.progressBarMessage }}</p>
 
 <!-- Active user menu: displayed to all users regardless of privileges -->
 <div ng-show="menu.isLoggedIn();">
