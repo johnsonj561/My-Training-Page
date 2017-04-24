@@ -1,5 +1,3 @@
-// http://passportjs.org/docs/facebook
-
 var FacebookStrategy = require('passport-facebook').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var User = require('../models/user');
@@ -8,7 +6,6 @@ var jwt = require('jsonwebtoken');
 var secret = 'xxx';
 
 module.exports = function(app, passport){
-
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -31,12 +28,15 @@ module.exports = function(app, passport){
     });
   });
 
+  /*
+  * FacebookStrategy with Passport
+  */
   passport.use(
     new FacebookStrategy(
       {
         clientID: 'xxx',
         clientSecret: 'xxx',
-        callbackURL: "http://localhost:3000/auth/facebook/callback",
+        callbackURL: "xxx",
         profileFields: ['id', 'displayName', 'email']
       },
       function(accessToken, refreshToken, profile, done) {
@@ -54,31 +54,29 @@ module.exports = function(app, passport){
       }
     ));
 
-
-
-  // Use the GoogleStrategy within Passport.
-  //   Strategies in Passport require a `verify` function, which accept
-  //   credentials (in this case, an accessToken, refreshToken, and Google
-  //   profile), and invoke a callback with a user object.
+  /*
+  * GoogleStategy with Passport
+  */
   passport.use(new GoogleStrategy({
-    clientID: '217331476193-xxx.apps.googleusercontent.com',
+    clientID: 'xxx',
     clientSecret: 'xxx',
-    callbackURL: "http://localhost:3000/auth/google/callback"
+    callbackURL: "xxx"
   },
                                   function(accessToken, refreshToken, profile, done) {
-                                    console.log(profile._json.email);
-                                    User.findOne({ email: profile.emails[0].value }).select('username active password email').exec(function(err, user) {
-                                      if(err) done(err);
-                                      if(user && user!= null) {
-                                        done(null, user);  
-                                      }
-                                      else {
-                                        done(err);
-                                      }
-                                    });
-                                  }
+    console.log(profile._json.email);
+    User.findOne({ email: profile.emails[0].value }).select('username active password email').exec(function(err, user) {
+      if(err) done(err);
+      if(user && user!= null) {
+        done(null, user);  
+      }
+      else {
+        done(err);
+      }
+    });
+  }
                                  ));
 
+  
   app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login', 'profile', 'email'] }));
 
   app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/googleerror/' }), function(req, res) {
@@ -92,7 +90,6 @@ module.exports = function(app, passport){
 
   app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
 
-
   return passport;
 
-}
+};
