@@ -1,26 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-
-/*
-* Individual Training Component Schema
-* No specific format is required to allow user to choose between various component types
-CURRENTLY NOT BEING USED
-var TrainingComponent = new Schema({
-  pageType : { type: String, required: true },
-  title: { type: String, required: false },
-  body: { type: String, required: false },
-  video: { type: String, required: false },
-  audio: { type: String, required: false },
-  description: { type: String, required: false },
-  question: { type: String, required: false },
-  answer: { type: Number, required: false }
-});
-
-*/
-
-
-
 /*
 * Training Module Schema
 */
