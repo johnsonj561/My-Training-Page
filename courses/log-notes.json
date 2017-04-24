@@ -44,7 +44,7 @@
     {
       pageType: "text",
       title: "What To Document",
-      body: "Common documentation includes: <br>'Hourly rounds completed' plus update with any chagnes<br>Transportation to center, residence, outside meetings, shopping, outdoor activities with departure time and head count<br>Behavioral issues are documented so that clinical can reinforce client rules & regulations<br>Noticeable change in client well being and progress in treatment, both good and bad<br>Suspicion of drug use, self-harm, eating disorder, or sexual activity<br>Any information that can help the clinical team to treat their clients - a wide range of information from behavior/personality changes, isolation, conflict between clients, medication non-compliance, etc",
+      body: "<strong>Common documentation includes:</strong><ul><li>'Hourly rounds completed' and an update with any recent changes</li><li>Transportation to center, residence, outside meetings, shopping, outdoor activities with departure time and head count</li><li>Behavioral issues are documented so that clinical can reinforce client rules & regulations</li><li>Noticeable change in client well being and progress in treatment, both good and bad</li><li>Suspicion of drug use, self-harm, eating disorder, or sexual activity</li><li>Any information that can help the clinical team to treat their clients - a wide range of information from behavior/personality changes, isolation, conflict between clients, medication non-compliance, etc</li></ul>"
     },
     {
       pageType: "true-false",
@@ -71,10 +71,10 @@
       title: "Question 5",
       question: "Select an incident that should be documented in the log notes by a Resident Manager",
       answers: [ 
-        { answer: "Hourly rounds completed, all is well"},
-        { answer: "Specific paraphenelia was confiscated from John S luggage during admission process"},
+        { answer: "Hourly rounds completed, no changes, all is well."},
+        { answer: "Paraphenelia was confiscated from John S luggage during admission process. (including specific details of paraphenelia)"},
         { answer: "2018B is continuously reminded to clean the kitchen and put their dirty dishes away. Clients are refusing to clean."},
-        { answer: "I observed Mary K playing basketball while on restriction. She was reminded of restriction and asked to stop playing, she complied" },
+        { answer: "Mary K was observed playing basketball while on restriction. She was reminded of restriction and asked to stop playing, she apologized and complied." },
         { answer: "All of the above"}
       ],
       solution: 4

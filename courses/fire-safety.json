@@ -1,0 +1,58 @@
+{
+  name: "Fire Extinguisher Safety",
+  author:[
+    {
+      _id: ObjectId("58db0ec4127e7e1728aa5da4"),
+      name: "Justin Johnson"
+    }
+  ],
+  description: "A general overview of fire extinguisher safety in the workplace.",
+  lastEdit: "4/23/2017",
+  components: [
+    {
+      pageType: "video",
+      title: "Training Video",
+      video: "assets/media/fire-extinguisher-safety.mp4",
+      description: "Watch this short video that explains how to properly store and use fire extinguishers. Video privided by www.safetymemos.com"
+    },
+    {
+      pageType: "true-false",
+      title: "Question 1",
+      question: "Fire extinguishers should be inspected quarterly, at least every 3 months.",
+      answers: [ 
+        { answer: "True" },
+        { answer: "False" }
+      ],
+      solution: 1
+    },
+    {
+      pageType: "multiple-choice",
+      title: "Question 2",
+      question: "Select the option that is not true:",
+      answers: [ 
+        { answer: "Extinguishers should be charged at all times, with the gauge's needle pointing to green." },
+        { answer: "Extinguishers should be easily accessible with a minimum of 3 feet of clearance in all directions." },
+        { answer: "Fire extinguishers should be mounted on the wall at a height greater than 4 inches, and less than 60 inches." },
+        { answer: "Fire exinguishers should be hidden to prevent unauthorized personal from improperly using them." }
+      ],
+      solution: 3 
+    },
+    {
+      pageType: "multiple-choice",
+      title: "Question 3",
+      question: "What is the meaning of acronym PASS?",
+      answers: [ 
+        { answer: "Pull, Angle, Spray, Sweep" },
+        { answer: "Pull, Aim, Squeeze, Sweep" },
+        { answer: "Point, Alert, Squeeze, Spray" },
+        { answer: "Point, Aim, Squeeze, Sweep" }
+      ],
+      solution: 1 
+    }
+  ],
+  assignedCount: 0,
+  completedCount: 0,
+  totalScores: 0,
+  lowScore: 0,
+  highScore: 0
+}

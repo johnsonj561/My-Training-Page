@@ -43,7 +43,7 @@
       pageType: "image",
       title: "Example Rounds",
       image: "assets/media/rounds-image.png",
-      description: "This example rounds form has been filled out for the 1st hour of shift, 3:00pm. Notice that all current clients are listed in the left most column according to housing assignments. Also notice the abbreviations that are listed in the 3:00pm rounds column. These abbreviations denote where the client ws seen when rounds were completed. These abbreviations can be found on the next page."
+      description: "This example rounds form has been filled out for the 1st hour of shift, 3:00pm. Notice that all current clients are listed in the left most column according to housing assignments. Also notice the abbreviations that are listed in the 3:00pm rounds column. These abbreviations denote where the client was seen when rounds were completed. These abbreviations can be found on the next page."
     },
     {
       pageType: "image",
@@ -66,7 +66,7 @@
     {
       pageType: "text",
       title: "Special Circumstances",
-      body: "Rounds should be continuous - frequent contact with the clients is important to the safety of the community and is beneficial to the client's and their recovery. There may also be certain circumstances that warrant extra attention. At times, the clinical or operations teams may place a client on Q15s or Q30s, which means that this specific client now requires being checked on every 15 minutes or 30 minutes. This is typically done when staff is concerned about a client's well being or safety for one reason or another. A few areas of concern that would warrant extra attention include self-harm, eating disorder, mental instability, medical conditions, sexual acting out, or high risk for relapse/walk off."
+      body: "Rounds should be continuous - frequent contact with the clients is important to the safety of the community and is beneficial to the clients and their recovery. There may also be certain circumstances that warrant extra attention. At times, the clinical or operations teams may place a client on Q15s or Q30s, which means that this specific client now requires being checked on every 15 minutes or 30 minutes. This is typically done when staff is concerned about a client's well being or safety for one reason or another. A few areas of concern that would warrant extra attention include self-harm, eating disorder, mental instability, medical conditions, sexual acting out, or high risk for relapse/walk off."
     },
     {
       pageType: "multiple-choice",
