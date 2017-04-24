@@ -86,8 +86,6 @@ var UserSchema = new Schema({
 
 
 
-
-
 /*
 * mongoose pre save middleware
 * http://mongoosejs.com/docs/middleware.html
