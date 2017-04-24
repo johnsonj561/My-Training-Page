@@ -16,7 +16,6 @@ angular.module('mainController', ['authServices', 'userServices'])
   * When token is near expiration, use will be promted to renew token
   */
   app.checkSession = function() {
-    console.log('in checksession');
     if(Auth.isLoggedIn()) {
       app.checkingSession = true;
       var interval = $interval(function() {
@@ -99,7 +98,6 @@ angular.module('mainController', ['authServices', 'userServices'])
         Auth.logout(); // Logout user
         $location.path('/'); // Change route to clear user object
         hideModal();
-        console.log('Logged out');
       }
     }, 10000);
   };
@@ -214,7 +212,6 @@ angular.module('mainController', ['authServices', 'userServices'])
         $timeout(function() {
           app.loginData = {};
           app.successMsg = false;
-          console.log('log in success, redirecting to main menu');
           $location.path('/menu');
           app.checkSession();
         }, 1000);
