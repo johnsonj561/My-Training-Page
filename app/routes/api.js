@@ -969,7 +969,7 @@ module.exports = function(router) {
       }
       // update the training module with new scores and return
       else {
-        module.totalScores += scoreOffset;
+        module.totalScores = module.totalScores*1 + scoreOffset*1;
         // if this is first person to complete training module, initialize high/low scores
         if(module.completedCount === 0) {
           module.lowScore = newScore;
