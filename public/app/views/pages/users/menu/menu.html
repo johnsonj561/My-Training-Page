@@ -8,9 +8,9 @@
 
 
 <!-- Progress bar displays user's training progress -->
-<div>
+<div ng-show="menu.displayProgressBar;">
   <label>Your Training Progress</label>
-  <div class="progress" ng-show="menu.displayProgressBar;">
+  <div class="progress">
     <div ng-class="{'progress-bar-success': menu.completionRate >= 90, 'progress-bar-info': menu.completionRate < 90, 'progress-bar-warning': menu.completionRate < 80,
                    'progress-bar-danger': menu.completionRate < 70}"
          class="progress-bar" role="progressbar" aria-valuenow="menu.completionRate" aria-valuemin="0" aria-valuemax="100"> {{ menu.completionRate }}%
@@ -50,10 +50,10 @@
             <!-- menu item -->
             <div class="col-lg-4 text-center menu-item">
               <!-- label -->
-              <a href="#"><label class="menu-label">Rankings</label></a>
+              <a href="#" data-toggle="tooltip" data-placement="bottom" title="Coming Soon!"><label class="menu-label">Rankings</label></a>
               <!-- icon -->
               <div class="menu-icon">
-                <a href="#"><i class="fa fa-bar-chart fa-3x menu-icon" aria-hidden="true"></i></a>
+                <a href="#" data-toggle="tooltip" data-placement="bottom" title="Coming Soon!"><i class="fa fa-bar-chart fa-3x menu-icon" aria-hidden="true"></i></a>
               </div>
               <!-- description -->
               <div class="menu-description">
@@ -115,10 +115,10 @@
             <!-- menu item -->
             <div class="col-lg-4 text-center menu-item">
               <!-- label -->
-              <a href="#"><label class="menu-label">View Reports</label></a>
+              <a href="#" data-toggle="tooltip" data-placement="bottom" title="Coming Soon!"><label class="menu-label">View Reports</label></a>
               <!-- icon -->
               <div class="menu-icon">
-                <a href="#"><i class="fa fa-pie-chart fa-3x menu-icon" aria-hidden="true"></i></a>
+                <a href="#" data-toggle="tooltip" data-placement="bottom" title="Coming Soon!"><i class="fa fa-pie-chart fa-3x menu-icon" aria-hidden="true"></i></a>
               </div>
               <!-- description -->
               <div class="menu-description">
@@ -143,10 +143,10 @@
             <!-- menu item -->
             <div class="col-lg-4 text-center menu-item">
               <!-- label -->
-              <a href="#"><label class="menu-label">New Training Module</label></a>
+              <a href="#" data-toggle="tooltip" data-placement="bottom" title="Coming Soon!"><label class="menu-label">New Training Module</label></a>
               <!-- icon -->
               <div class="menu-icon">
-                <a href="#"><i class="fa fa-code fa-3x menu-icon" aria-hidden="true"></i></a>
+                <a href="#" data-toggle="tooltip" data-placement="bottom" title="Coming Soon!"><i class="fa fa-code fa-3x menu-icon" aria-hidden="true"></i></a>
               </div>
               <!-- description -->
               <div class="menu-description">
