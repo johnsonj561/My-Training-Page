@@ -22,6 +22,7 @@
     <script src="assets/js/angular-sanitize/angular-sanitize.js"></script>
     <script src="assets/js/angular-animate.js"></script>
 
+
     <!-- Angular Config/Routes -->
     <script src="app/app.js"></script>
     <script src="app/routes.js"></script>
@@ -69,17 +70,17 @@
       </div>
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
-          <li><a class="nav-link" ng-show="main.isLoggedIn" href="/logout" ng-click="main.logout()">Logout</a></li>
           <li><a class="nav-link" ng-show="!main.isLoggedIn" href="/register">Register</a></li>
           <li><a class="nav-link" ng-show="main.isLoggedIn" href="/menu">Menu</a></li>
           <li><a class="nav-link" ng-show="!main.isLoggedIn" href="/">Login</a></li>
+          <li><a class="nav-link" ng-show="main.isLoggedIn" href="/logout" ng-click="main.logout()" >Sign Out</a></li>
         </ul>
       </div>
     </nav>
 
 
     <div class="container">
-      
+
       <!-- angular view -->
       <div ng-view></div>
 
@@ -123,6 +124,9 @@
           $("#btn-nav-toggle").trigger("click");
         }
       });
+      $('[data-toggle="tooltip"]').tooltip(); 
+
+    </script>
     </script>
   </body>
 
