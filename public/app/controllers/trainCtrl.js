@@ -56,7 +56,7 @@ angular.module('trainController', ['trainingServices', 'userServices', 'ngSaniti
       app.viewCompleted = true;
       $("button#view-completed-btn").text("Hide Completed");
     }
-  }
+  };
 
 
   /*
@@ -324,6 +324,7 @@ angular.module('trainController', ['trainingServices', 'userServices', 'ngSaniti
   * Update training module data with new score
   */
   var updateTrainingModuleData = function(trainingData) {
+    console.log('in updateTrainingModuleData');
     TrainingModule.updateScores(trainingData).then(function(data) {
       if(data.data.success) {
         console.log('training module updated');
@@ -339,6 +340,7 @@ angular.module('trainController', ['trainingServices', 'userServices', 'ngSaniti
   * Update user's assignment subdocument with new score
   */
   var updateUserAssignmentScore = function(trainingData) {
+    console.log('in updateUserAssignmentScore');
     // now we update database with trainingData
     // update the user document
     User.storeTrainingScore(trainingData).then(function(data) {
