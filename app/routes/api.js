@@ -932,6 +932,7 @@ module.exports = function(router) {
   * If success, return the user's previous score, it will be needed to update training module
   */
   router.put('/storeusertrainingdata', function(req, res) {
+    console.log('in updateUserAssignmentScores api: ' + req.body);
     var trainingData = req.body;
     // update the user
     User.findOneAndUpdate( 
@@ -959,6 +960,7 @@ module.exports = function(router) {
   * Updates user's assignment data to reflect changes in training module score
   */
   router.put('/updateScores', function(req, res) {
+    console.log('in updateTrainingModuleScores api: ' + req.body);
     var module_id = req.body.module._id;
     var newScore = req.body.module.score;
     var scoreOffset = req.body.isRetake ? req.body.scoreDifference : req.body.module.score;
@@ -969,7 +971,7 @@ module.exports = function(router) {
       }
       // update the training module with new scores and return
       else {
-        module.totalScores += scoreOffset;
+        module.totalScores = module.totalScores*1 + scoreOffset*1;
         // if this is first person to complete training module, initialize high/low scores
         if(module.completedCount === 0) {
           module.lowScore = newScore;
@@ -1019,7 +1021,7 @@ module.exports = function(router) {
           }
         }
         var result = Math.ceil((completedCount/assignedCount)*100);
-        res.json({ success: true, completionRate: result });
+        res.json({ success: true, completionRate: result, assignmentCount: assignedCount });
       }
       
     });
