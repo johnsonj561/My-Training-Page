@@ -48,7 +48,7 @@ angular.module('mainController', ['authServices', 'userServices'])
 
   app.checkSession();
 
-  var showModal = function(option, score) {
+  var showModal = function(option) {
     app.choiceMade = false;
     app.modalHeader = undefined;
     app.modalBody = undefined;
@@ -91,10 +91,9 @@ angular.module('mainController', ['authServices', 'userServices'])
       }, 1500);
     }
 
-
     // if no choice is made after 10 seconds, then log user out
     $timeout(function() {
-      if(!app.choiceMade && option === PROMPT_LOGOUT_MODAL) {
+      if(!app.choiceMade && option === TOKEN_EXPIRED_MODAL) {
         Auth.logout(); // Logout user
         $location.path('/'); // Change route to clear user object
         hideModal();
@@ -158,6 +157,7 @@ angular.module('mainController', ['authServices', 'userServices'])
           }
           else{
             app.loadme = true;
+            console.log('mainCtrl - not admin');
           }
         });
         app.loadme = true;
@@ -213,7 +213,7 @@ angular.module('mainController', ['authServices', 'userServices'])
           app.loginData = {};
           app.successMsg = false;
           $location.path('/menu');
-          app.checkSession();
+          //app.checkSession();
         }, 1000);
       }
       else{
