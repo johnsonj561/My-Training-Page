@@ -8,13 +8,14 @@ angular.module('trainController', ['trainingServices', 'userServices', 'ngSaniti
   app.assignments = {};
   app.test = 'hello';
   app.viewCompleted = true;
-
+  
+  app.loading = true;
+  
   /*
   * Get the Training Modules associated with current user
   */
   User.getCurrentUser().then(function(data) {
     if(data.data.success) {
-      app.loading = false;
       app.user._id = data.data.user._id;
       TrainingModule.getUserTraining(app.user._id).then(function(data) {
         if(data.data.success) {
@@ -26,6 +27,10 @@ angular.module('trainController', ['trainingServices', 'userServices', 'ngSaniti
               app.assignments[i].module.completionDate = (edit.getMonth()+1) + '/' + (edit.getDate()) + '/' + (edit.getFullYear());
             }
           }
+          
+          // data gathered, remove loading icon
+          app.loading = false;
+          
           if(app.assignments.length == 0) {
             app.errorMsg = "You don't have any training assignments to complete at this time.";  
           }
@@ -37,6 +42,7 @@ angular.module('trainController', ['trainingServices', 'userServices', 'ngSaniti
       });
     }
     else {
+      app.loading = false;
       app.errorMsg = data.data.message;
     }
   });
