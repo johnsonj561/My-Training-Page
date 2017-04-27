@@ -37,6 +37,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 */
 app.use(express.static(__dirname + '/public'));
 
+// force redirecto to http://www.
+app.use(function(req, res, next) {
+  console.log(req.headers.host);
+  console.log(req.url);
+  // 52\.89\.200\.83.*
+  if(req.headers.host.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,4}/i)){
+    console.log('regex match');
+    res.redirect(301, "http://localhost:3000" + req.url);
+  }
+  next();
+});
+
 /*
 * Must access routes after they've been parsed
 * Order of middleware is important
