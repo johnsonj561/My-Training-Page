@@ -10,6 +10,7 @@ angular.module('mainController', ['authServices', 'userServices'])
   // web site will warn user when app has 5 minutes until expiration
   const SESSION_EXPIRE_WARNING_TIME = 60*5;
 
+ 
   /*
   * Check Session
   * If logged in, recurring interval set to check for valid token
@@ -149,7 +150,6 @@ angular.module('mainController', ['authServices', 'userServices'])
       Auth.getUser().then(function(data) {
         app.username = data.data.username;
         app.useremail = data.data.email;
-
         User.getPermission().then(function(data) {
           if(data.data.permission === 'admin') {
             app.authorized = true;
@@ -157,7 +157,6 @@ angular.module('mainController', ['authServices', 'userServices'])
           }
           else{
             app.loadme = true;
-            console.log('mainCtrl - not admin');
           }
         });
         app.loadme = true;
@@ -169,6 +168,8 @@ angular.module('mainController', ['authServices', 'userServices'])
       app.username = "";
       app.useremail = "";
       app.loadme = true;
+      Auth.logout(); // Logout user
+      $location.path('/'); // Change route to clear user object
     }
 
     // remove facebook's return url garbage
