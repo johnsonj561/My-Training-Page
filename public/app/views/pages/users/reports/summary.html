@@ -1,0 +1,95 @@
+<!-- Header -->
+<div class="page-header text-center" ng-show="report.displaySummary">
+  <h1>{{ main.username }} Training Summary</h1>
+</div>
+<!-- Header -->
+
+<!-- Header -->
+<div class="page-header text-center" ng-show="report.displayModule">
+  <h1>Training Module Statistics</h1>
+</div>
+<!-- Header -->
+
+<!-- Loading Icon (Bootstrap) -->
+<div class="jumbotron text-center" ng-show="report.loading">
+  <span class="glyphicon glyphicon-repeat spinner"></span>
+  <p>Loading....</p>
+</div>
+<!-- Loading Icon (Bootstrap) -->
+
+<!-- Error Message -->
+<div class="row show-hide-message" ng-show="report.errorMsg">
+  <div class="alert alert-danger">{{ report.errorMsg }}</div>
+</div>
+
+
+
+<!-- DISPLAY SUMMARY VIEW -->
+<div ng-show="report.displaySummary">
+  <!-- GPA Pie Chart -->
+  <div>
+    <div id="chart-container" class="gpa-pie-chart"></div>
+    <table class="table table-bordered">
+      <tr>
+        <th class="text-center">Total Assignments</th>
+        <th class="text-center">Complete</th>
+        <th class="text-center">Incomplete</th>
+        <th class="text-center">Average Score</th>
+      </tr>
+      <tr>
+        <td class="text-center">{{ report.assignmentCount }}</td>
+        <td class="text-center">{{ report.completedCount }}</td>
+        <td class="text-center">{{ report.incompleteCount }}</td>
+        <td class="text-center" ng-class="{'success': report.averageScore >= 90, 'primary': report.averageScore < 90, 
+                                          'warning': report.averageScore < 80,
+                                          'danger': report.averageScore < 70 }">
+          {{ report.averageScore }}</td>
+      </tr>
+    </table>
+  </div>
+  <!-- Training Module Assignments Table -->
+  <div class="panel panel-primary">
+    <!-- Heading -->
+    <div class="panel-heading">
+      <strong>Assigned Training</strong>
+    </div>
+    <!-- Start: Table -->
+    <table class="table">
+      <tr>
+        <th>Name</th>
+        <th class="desktop-only">Descriptioin</th>
+        <th>Score</th>
+        <th>Stats</th>
+      </tr>
+      <tr ng-repeat="module in report.assignments">
+        <td>{{ module.name }}</td>
+        <td class="desktop-only">{{ module.description }}</td>
+        <td class="summary-score" ng-class="{'text-success': module.score >= 90, 'text-primary': module.score < 90, 
+                                            'text-warning': module.score < 80,
+                                            'text-danger': module.score < 70 }">
+          {{ module.score }}</td>
+        <td><span class="assign-training" ng-click="report.displayModuleStats($index);">
+          <a>View More</a>
+          </span>
+        </td>
+      </tr>
+      <!-- End: Table -->
+    </table>
+  </div>
+  <!-- User Management Table -->
+</div>
+
+<!-- DISPLAY MODULE VIEW -->
+<div ng-show="report.displayModule">
+  <div class="module-data">
+    <button type="button" ng-click="report.returnToSummary();" class="btn btn-default pull-right">Back To Summary</button>
+    <h3>Title: {{ report.selectedModule.name }}</h3>
+    <h4>Description: {{ report.selectedModule.description }}</h4>
+    <p>Author: {{ report.selectedModule.author[0].name }}</p>
+    <p>Assignment Date: {{ report.userAssignment.assignedDate }}</p>
+    <p>Completion Date: {{ report.userAssignment.completionDate }}</p>
+  </div>
+</div>
+<div class = "module-graph">
+  <div id="bar-graph-container"></div>
+</div>
