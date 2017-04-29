@@ -141,10 +141,6 @@ module.exports = function(router) {
   * Update Password
   */
   router.post('/updatepassword', function(req, res) {
-    console.log('in server');
-    console.log(req.body);
-    console.log('out server');
-
     var editUser = req.body._id;
 
     User.findOne({ _id: editUser }, function(err, user) {
