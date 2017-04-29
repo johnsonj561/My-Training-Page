@@ -22,7 +22,6 @@
     <script src="assets/js/angular-sanitize/angular-sanitize.js"></script>
     <script src="assets/js/angular-animate.js"></script>
 
-
     <!-- Angular Config/Routes -->
     <script src="app/app.js"></script>
     <script src="app/routes.js"></script>
@@ -34,6 +33,7 @@
     <script src="app/controllers/managementCtrl.js"></script>
     <script src="app/controllers/menuCtrl.js"></script>
     <script src="app/controllers/trainCtrl.js"></script>
+    <script src="app/controllers/reportCtrl.js"></script>
 
     <!-- Angular Services -->
     <script src="app/services/userServices.js"></script>
@@ -117,6 +117,11 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery-3.1.1.js"></script>
     <script src="assets/js/bootstrap.js"></script>
+    <!-- RGraph Utilities -->
+    <script src="assets/js/RGraph/RGraph/RGraph.svg.common.core.js"></script>
+    <script src="assets/js/RGraph/RGraph/RGraph.svg.common.tooltips.js"></script>
+    <script src="assets/js/RGraph/RGraph/RGraph.svg.pie.js"></script>
+    <script src="assets/js/RGraph/RGraph/RGraph.svg.hbar.js"></script>
     <!-- jquery to de-activate the navbar-toggle after a link has been --> 
     <script>
       $(".nav-link").on("click", function() {
@@ -124,10 +129,6 @@
           $("#btn-nav-toggle").trigger("click");
         }
       });
-      $('[data-toggle="tooltip"]').tooltip(); 
-
-    </script>
     </script>
   </body>
-
 </html>
