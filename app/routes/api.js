@@ -30,7 +30,7 @@ module.exports = function(router) {
   */
   router.post('/users', function(req, res) {
     var user = new User();
-    user.username = req.body.username;
+    user.username = req.body.username.toLowerCase();
     user.password = req.body.password;
     user.email = req.body.email;
     user.name = req.body.name;
@@ -65,7 +65,7 @@ module.exports = function(router) {
           }
           else if(err) {
             if(err.code == 11000) {
-              res.json({ success: false, message: "Username or email already exists" });
+              res.json({ success: false, message: "Username or email already exists in database" });
             }
             else{
               res.json({ success: false, message: err });
@@ -151,7 +151,7 @@ module.exports = function(router) {
       if(err) throw err;
 
       if(!user) {
-        res.json({ success: false, message: 'No user found' });
+        res.json({ success: false, message: 'No user found in database' });
       }
       else {
         user.password = req.body.password;
@@ -168,16 +168,17 @@ module.exports = function(router) {
   });
 
 
-/*
+  /*
   * Login User
   * Validates login info and creates session
   */
   router.post('/authenticate', function(req, res) {
-    User.findOne({ username: req.body.username }).select('email username password active').exec(function(err, user) {
+    var username = req.body.username.toLowerCase();
+    User.findOne({ username: username }).select('email username password active').exec(function(err, user) {
       if(err) throw err;
 
       if(!user) {  // bad username provided
-        res.json({ success: false, message: 'Could not authenticate user' });
+        res.json({ success: false, message: 'Invalid username, please try again' });
       }
 
       else if(user) {    // username is valid
@@ -185,7 +186,7 @@ module.exports = function(router) {
         if(req.body.password) {   // password is not empty
           var validPassword = user.comparePassword(req.body.password);
           if(!validPassword) {    // password does not match
-            res.json({ success: false, message: 'Could not authenticate password' });
+            res.json({ success: false, message: 'Could not validate password, please try again' });
           }
           else if(!user.active) {
             res.json({ success: false, message: 'Account is not yet activated. Please check email for activation link.', expired: true });
@@ -210,7 +211,8 @@ module.exports = function(router) {
   * Returns true if username is valid (does not already exist)
   */
   router.post('/checkusername', function(req, res) {
-    User.findOne({ username: req.body.username }).select('username').exec(function(err, user) {
+    var username = req.body.username.toLowerCase();
+    User.findOne({ username: username }).select('username').exec(function(err, user) {
       if(err) throw err;
       if(user) {
         res.json({ success: false, message: 'That username is already taken' });
@@ -287,19 +289,20 @@ module.exports = function(router) {
   * Verifies user credentials before re-sending activation link
   */	
   router.post('/resend', function(req, res) {
-    User.findOne({ username: req.body.username }).select('username password active').exec(function(err, user) {
+    var username = req.body.username.toLowerCase();
+    User.findOne({ username: username }).select('username password active').exec(function(err, user) {
       if (err) throw err; // Throw error if cannot connect
       // Check if username is found in database
       if (!user) {
-        res.json({ success: false, message: 'Could not authenticate user' }); // Username does not match username found in database
+        res.json({ success: false, message: 'Invalid username' }); // Username does not match username found in database
       } else if (user) {
         // Check if password is sent in request
         if (req.body.password) {
           var validPassword = user.comparePassword(req.body.password); // Password was provided. Now check if matches password in database
           if (!validPassword) {
-            res.json({ success: false, message: 'Could not authenticate password' }); // Password does not match password found in database
+            res.json({ success: false, message: 'Could not validate password' }); // Password does not match password found in database
           } else if (user.active) {
-            res.json({ success: false, message: 'Account is already activated.' }); // Account is already activated
+            res.json({ success: false, message: 'Account is already activated' }); // Account is already activated
           } else {
             res.json({ success: true, user: user });
           }
@@ -315,7 +318,8 @@ module.exports = function(router) {
   * Sends user new email with account activation link
   */
   router.put('/resend', function(req, res) {
-    User.findOne({ username: req.body.username }).select('username name email temporarytoken').exec(function(err, user) {
+    var username = req.body.username.toLoweCase();
+    User.findOne({ username: username }).select('username name email temporarytoken').exec(function(err, user) {
       if (err) throw err; // Throw error if cannot connect
       user.temporarytoken = jwt.sign({ username: user.username, email: user.email }, secret, { expiresIn: '24h' }); // Give the user a new token to reset password
       // Save user's new token to the database
@@ -379,7 +383,8 @@ module.exports = function(router) {
   * Sends email to user with reset password link
   */
   router.put('/resetpassword', function(req, res) {
-    User.findOne({ username: req.body.username }).select('username active email resettoken name').exec(function(err, user) {
+    var username = req.body.username.toLowerCase();
+    User.findOne({ username: username }).select('username active email resettoken name').exec(function(err, user) {
       if (err) throw err;
       if (!user) {
         res.json({ success: false, message: 'Username was not found' }); // Return error if username is not found in database
@@ -394,11 +399,11 @@ module.exports = function(router) {
           } else {
             // Create e-mail object to send to user
             var email = {
-              from: 'Localhost Staff, staff@localhost.com',
+              from: 'My Training Page Staff, staff@mytrainingpage.com',
               to: user.email,
-              subject: 'Localhost Reset Password Request',
-              text: 'Hello ' + user.name + ', You recently request a password reset link. Please click on the link below to reset your password:<br><br><a href="http://localhost:3000/reset/' + user.resettoken,
-              html: 'Hello<strong> ' + user.name + '</strong>,<br><br>You recently request a password reset link. Please click on the link below to reset your password:<br><br><a href="http://localhost:3000/reset/' + user.resettoken + '">RESET PASSWORD</a>'
+              subject: 'My Training Page Reset Password Request',
+              text: 'Hello ' + user.name + ', You recently request a password reset link. Please click on the link below to reset your password:<br><br><a href="http://www.mytrainingpage.com/reset/' + user.resettoken,
+              html: 'Hello<strong> ' + user.name + '</strong>,<br><br>You recently request a password reset link. Please click on the link below to reset your password:<br><br><a href="http://www.mytrainingpage.com/reset/' + user.resettoken + '">RESET PASSWORD</a>'
             };
             // Function to send e-mail to the user
             client.sendMail(email, function(err, info) {
@@ -437,7 +442,8 @@ module.exports = function(router) {
   * Save Password
   */
   router.put('/savepassword', function(req, res) {
-    User.findOne({ username: req.body.username }).select('username email name password resettoken').exec(function(err, user) {
+    var username = req.body.username.toLowerCase();
+    User.findOne({ username: username }).select('username email name password resettoken').exec(function(err, user) {
       if (err) throw err; // Throw error if cannot connect
       if (req.body.password == null || req.body.password == '') {
         res.json({ success: false, message: 'Password not provided' });
@@ -451,11 +457,11 @@ module.exports = function(router) {
           } else {
             // Create e-mail object to send to user
             var email = {
-              from: 'Localhost Staff, staff@localhost.com',
+              from: 'My Training Page Staff, staff@mytrainingpage.com',
               to: user.email,
-              subject: 'Localhost Reset Password',
-              text: 'Hello ' + user.name + ', This e-mail is to notify you that your password was recently reset at localhost.com',
-              html: 'Hello<strong> ' + user.name + '</strong>,<br><br>This e-mail is to notify you that your password was recently reset at localhost.com'
+              subject: 'My Training Page Reset Password',
+              text: 'Hello ' + user.name + ', This e-mail is to notify you that your password was recently reset at mytrainingpage.com',
+              html: 'Hello<strong> ' + user.name + '</strong>,<br><br>This e-mail is to notify you that your password was recently reset at mytrainingpage.com'
             };
             // Function to send e-mail to the user
             client.sendMail(email, function(err, info) {
@@ -505,7 +511,8 @@ module.exports = function(router) {
   * Renews user token for 24 hours
   */
   router.get('/renewToken/:username', function(req, res) {
-    User.findOne({ username: req.params.username }).select().exec(function(err, user) {
+    var username = req.params.username.toLowerCase();
+    User.findOne({ username: username }).select().exec(function(err, user) {
       if(err) throw err;
       if(!user) {
         res.json({ success: false, message: 'No user was found' }); 
@@ -523,7 +530,8 @@ module.exports = function(router) {
   * Returns current user's permission
   */
   router.get('/permission', function(req, res) {
-    User.findOne({ username: req.decoded.username }, function(err, user) {
+    var username = req.decoded.username.toLowerCase();
+    User.findOne({ username: username }, function(err, user) {
       if(err) throw err;
       if(!user) {
         res.json({ success: false, message: 'No user was found' });  
@@ -542,7 +550,7 @@ module.exports = function(router) {
   router.get('/management', function(req, res) {
     User.find({}, function(err, users) {
       if(err) throw err;
-      User.findOne({ username: req.decoded.username }, function(err, mainUser) {
+      User.findOne({ username: req.decoded.username.toLowerCase() }, function(err, mainUser) {
         if(err) throw err;
         if(!mainUser) {
           res.json({ success: false, message: 'No user fond' });  
@@ -590,8 +598,8 @@ module.exports = function(router) {
   * Delete User with specified username from db
   */
   router.delete('/management/:username', function(req, res) {
-    var deletedUser = req.params.username;
-    User.findOne({ username: req.decoded.username }, function(err, mainUser) {
+    var deletedUser = req.params.username.toLowerCase();
+    User.findOne({ username: username }, function(err, mainUser) {
       if(err) throw err;
       if(!mainUser) {
         res.json({ success: false, message: 'No user found' });
@@ -616,10 +624,10 @@ module.exports = function(router) {
   */
   router.get('/edit/:id', function(req, res) {
     var editUser = req.params.id;
-    User.findOne({ username: req.decoded.username }, function(err, mainUser) {
+    User.findOne({ username: req.decoded.username.toLowerCase() }, function(err, mainUser) {
       if(err) throw err;
       if(!mainUser) {
-        res.json({ success: false, message: 'No user found' });  
+        res.json({ success: false, message: 'No admin user found' });  
       }
       else {
         if(mainUser.permission === 'admin') {
@@ -644,7 +652,7 @@ module.exports = function(router) {
   * Get current user profile
   */
   router.get('/getcurrent', function(req, res) {
-    User.findOne({ username: req.decoded.username }, function(err, user) {
+    User.findOne({ username: req.decoded.username.toLowerCase() }, function(err, user) {
       if(err) throw err;
       if(!user) {
         res.json({ success: false, message: 'No user found' });
@@ -663,11 +671,11 @@ module.exports = function(router) {
   router.put('/edit', function(req, res) {
     var editUser = req.body._id; // Assign _id from user to be editted to a variable
     if (req.body.name) var newName = req.body.name; // Check if a change to name was requested
-    if (req.body.username) var newUsername = req.body.username; // Check if a change to username was requested
+    if (req.body.username) var newUsername = req.body.username.toLowerCase(); // Check if a change to username was requested
     if (req.body.email) var newEmail = req.body.email; // Check if a change to e-mail was requested
     if (req.body.permission) var newPermission = req.body.permission; // Check if a change to permission was requested
     // Look for logged in user in database to check if have appropriate access
-    User.findOne({ username: req.decoded.username }, function(err, mainUser) {
+    User.findOne({ username: req.decoded.username.toLowerCase() }, function(err, mainUser) {
       if (err) throw err; // Throw err if cannot connnect
       // Check if logged in user is found in database
       if (!mainUser) {
@@ -861,6 +869,23 @@ module.exports = function(router) {
   });
 
   /*
+  * Get User Training
+  * Returns all training modules assigned to user with specified id
+  */
+  router.get('/usertraining', function(req, res) {
+    User.find({ username: req.decoded.username.toLowerCase()  }).select('assignments').exec(function(err, assignments) {
+      if(err) throw err;
+      if(!assignments) {
+        res.json({ success: false, message: 'No assignments were found for this user.' });
+      }
+      else {
+        res.json({ success: true, assignments: assignments });
+      }
+    });
+
+  });
+
+  /*
   * Get All Training
   * Returns all available training modules to populate assignment page
   */
@@ -934,13 +959,15 @@ module.exports = function(router) {
   router.put('/storeusertrainingdata', function(req, res) {
     console.log('in updateUserAssignmentScores api: ' + req.body);
     var trainingData = req.body;
+    var date = new Date();
+    date = (date.getMonth() + 1) + '/' + (date.getDate()) + '/' + (date.getFullYear());
     // update the user
     User.findOneAndUpdate( 
       {"_id" : trainingData.user, "assignments.module._id" : trainingData.module._id },
       { "$set": 
        {
          "assignments.$.module.score": trainingData.module.score,
-         "assignments.$.module.completionDate": new Date().toISOString()
+         "assignments.$.module.completionDate": date
        }
       },
       function(err, user) {
@@ -1000,8 +1027,8 @@ module.exports = function(router) {
       }
     });
   });
-  
-  
+
+
   /*
   * Get User Completion Rate
   * Calculates percentage of how many training modules have been completed by user
@@ -1023,11 +1050,11 @@ module.exports = function(router) {
         var result = Math.ceil((completedCount/assignedCount)*100);
         res.json({ success: true, completionRate: result, assignmentCount: assignedCount });
       }
-      
+
     });
   });
-  
-  
+
+
   /*
   * Management
   * Returns list of all users and the current users permission
@@ -1035,7 +1062,7 @@ module.exports = function(router) {
   router.get('/management', function(req, res) {
     User.find({}, function(err, users) {
       if(err) throw err;
-      User.findOne({ username: req.decoded.username }, function(err, mainUser) {
+      User.findOne({ username: req.decoded.username.toLowerCase() }, function(err, mainUser) {
         if(err) throw err;
         if(!mainUser) {
           res.json({ success: false, message: 'No user found' });  
@@ -1057,14 +1084,6 @@ module.exports = function(router) {
 
     });
   });
-
-  
-  
-  
-  
-  
-  
-
 
 
   return router;
