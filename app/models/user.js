@@ -30,7 +30,7 @@ var emailValidator = [
   }),
   validate({
     validator: 'isLength',
-    arguments: [3, 30],
+    arguments: [3, 40],
     message: 'Email should be between {ARGS[0]} and {ARGS[1]} characters'
   })
 ];
