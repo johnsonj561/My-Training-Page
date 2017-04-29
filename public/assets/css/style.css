@@ -514,6 +514,17 @@ div.assignment-buttons > a {
 }
 
 
+/* USER SUMMARY/MODULE DATA
+====================== */
+div.module-data > p {
+  margin: 0px;
+}
+
+div.module-data > h4 {
+  margin-top: 30px;
+}
+
+
 /* RGRAPH
 ====================== */
 .gpa-pie-chart {
