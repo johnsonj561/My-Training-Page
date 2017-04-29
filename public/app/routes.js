@@ -178,6 +178,13 @@ var app = angular.module('appRoutes', ['ngRoute'])
     authenticated: true
   })
   
+  .when('/usersummary', {
+    templateUrl: 'app/views/pages/users/reports/summary.html',
+    controller: 'reportCtrl',
+    controllerAs: 'report',
+    authenticated: true
+  })
+  
   
   // "catch all" to redirect to home page            
   .otherwise({ redirectTo: '/' });
