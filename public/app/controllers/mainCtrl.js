@@ -7,10 +7,13 @@ angular.module('mainController', ['authServices', 'userServices'])
   const TOKEN_EXPIRED_MODAL = 1;
   const PROMPT_LOGOUT_MODAL = 2;
   const TRAINING_SCORE =  3;
-  // web site will warn user when app has 5 minutes until expiration
-  const SESSION_EXPIRE_WARNING_TIME = 60*5;
-
- 
+  // warn user when app has 60 seconds remaining
+  const SESSION_EXPIRE_WARNING_TIME = 60;
+  // display the expiration warning modal for 15 seconds
+  const SESSION_EXPIRE_MODAL_DELAY = 1000*15;
+  // check session every 30 seconds
+  const CHECK_SESSION_INTERVAL = 1000*30;
+  
   /*
   * Check Session
   * If logged in, recurring interval set to check for valid token
@@ -30,81 +33,69 @@ angular.module('mainController', ['authServices', 'userServices'])
             var base64 = base64Url.replace('.', '+').replace('_', '/');
             return JSON.parse($window.atob(base64));
           }
-
           // get the expiration time from token (initialized to 1 hour)
           var expireTime = self.parseJwt(token);
           // get current time stamp
           var timeStamp = Math.floor(Date.now() /1000);
           // calc time til expiration = expiration time - current time
           var timeLeft = expireTime.exp - timeStamp;
-          if(timeLeft <= SESSION_EXPIRE_WARNING_TIME) {
+          if(timeLeft < 0) {
+            Auth.logout();
+            app.checkingSession = false;
+            app.isLoggedIn = false;
+            $location.path('/');
+          }
+          else if(timeLeft <= SESSION_EXPIRE_WARNING_TIME) {
             showModal(TOKEN_EXPIRED_MODAL);
             $interval.cancel(interval);
           }
-
         }
-      }, 10000);
+      }, CHECK_SESSION_INTERVAL);
     }
   };
 
   app.checkSession();
 
   var showModal = function(option) {
-    app.choiceMade = false;
     app.modalHeader = undefined;
     app.modalBody = undefined;
     app.hideButton = false;
 
     if(option === TOKEN_EXPIRED_MODAL) {
+      app.choiceMade = false;
       app.modalHeader = 'Timeout Warning';
-      app.modalBody = 'Your session will expire in 1 minute. Would you like to renew your session?';
+      app.modalBody = 'Your session is about to expire, would you like to renew your session?';
       $('#myModal').modal({ backdrop: 'static' });
+      // if no choice is made after 10 seconds, then log user out
+      $timeout(function() {
+        if(!app.choiceMade) {
+          Auth.logout(); // Logout user
+          //$location.path('/'); // Change route to clear user object
+          app.endSession();
+        }
+      }, SESSION_EXPIRE_MODAL_DELAY);
     }
+
     else if(option === PROMPT_LOGOUT_MODAL){
       app.hideButton = true; // Hide 'yes'/'no' buttons
       app.modalHeader = 'Logging Out'; // Set header
       $("#myModal").modal({ backdrop: "static" }); // Open modal
       // After 1000 milliseconds (1 second), hide modal and log user out
       $timeout(function() {
-        Auth.logout(); // Logout user
-        $location.path('/'); // Change route to clear user object
-        hideModal(); // Close modal
+        Auth.logout(); 
+        $location.path('/'); 
+        hideModal();
         $route.reload();
       }, 1000);
     }
-    else if(option === TRAINING_SCORE) {
-      app.hideButton = true;
-      app.showCloseButton = true;
-      app.modalHeader = 'Training Module Complete!';
-      if(score > 90) {
-        app.modalBody = 'Congratulations! You scored a ' + score + '. Keep up the good work!';
-      }
-      else if(score > 75) {
-        app.modalBody = 'You scored a ' + score + '. Feel free to re-test if you want to get a higher score.';
-      }
-      else {
-        app.modalBody = 'You finished the course, but only scored a ' + score + '. You should try again';
-      }
-      $('#myModal').modal({ backdrop: 'static' });
-      $timeout(function() {
-        $location.path('/menu'); // Change route to clear user object
-        $route.reload();
-      }, 1500);
-    }
 
-    // if no choice is made after 10 seconds, then log user out
-    $timeout(function() {
-      if(!app.choiceMade && option === TOKEN_EXPIRED_MODAL) {
-        Auth.logout(); // Logout user
-        $location.path('/'); // Change route to clear user object
-        hideModal();
-      }
-    }, 10000);
   };
 
+  /*
+  * Renew Session
+  */
   app.renewSession = function() {
     app.choiceMade = true;
-
     User.renewSession(app.username).then(function(data) {
       if(data.data.success) {
         AuthToken.setToken(data.data.token);
@@ -118,16 +109,21 @@ angular.module('mainController', ['authServices', 'userServices'])
   };
 
 
+  /*
+  * End Session
+  */
   app.endSession = function() {
     app.choiceMade = true;
-
+    app.checkingSession = false;
     hideModal();
-
     $timeout(function() {
       showModal(PROMPT_LOGOUT_MODAL);  
-    }, 1000);
+    }, 500);
   };
 
+  /*
+  * Hide Modal
+  */
   var hideModal = function() {
     $('#myModal').modal('hide');  
   };
@@ -140,11 +136,9 @@ angular.module('mainController', ['authServices', 'userServices'])
   * Invoked whenever route changes
   */
   $rootScope.$on('$routeChangeStart', function() {
-
     if(!app.checkingSession) {
       app.checkSession();
     }
-
     if(Auth.isLoggedIn()) {
       app.isLoggedIn = true;
       Auth.getUser().then(function(data) {
@@ -162,21 +156,18 @@ angular.module('mainController', ['authServices', 'userServices'])
         app.loadme = true;
       });
     }
-
     else{
+      app.checkingSession = false;
       app.isLoggedIn = false;
       app.username = "";
       app.useremail = "";
       app.loadme = true;
       Auth.logout(); // Logout user
-      $location.path('/'); // Change route to clear user object
     }
-
     // remove facebook's return url garbage
     if($location.hash() == '_=_') {
       $location.hash(null);
     }
-
   });
 
   // prevent facebook login from opening new window
@@ -193,7 +184,6 @@ angular.module('mainController', ['authServices', 'userServices'])
   };
 
 
-
   /*
   * User Login
   */
@@ -203,7 +193,6 @@ angular.module('mainController', ['authServices', 'userServices'])
     app.successMsg = false;
     app.expired = false;
     app.disabled = true;
-
     Auth.login(app.loginData).then(function(data) {
       if(data.data.success) {
         // Hide loading and ceate success message
@@ -214,7 +203,6 @@ angular.module('mainController', ['authServices', 'userServices'])
           app.loginData = {};
           app.successMsg = false;
           $location.path('/menu');
-          //app.checkSession();
         }, 1000);
       }
       else{
@@ -232,11 +220,4 @@ angular.module('mainController', ['authServices', 'userServices'])
 
     });
   };
-
-  // prompt user to confirm logout action
-  app.logout = function() {
-    showModal(PROMPT_LOGOUT_MODAL);
-  };
-
-
 });
