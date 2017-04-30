@@ -6,7 +6,6 @@ angular.module('trainController', ['trainingServices', 'userServices', 'ngSaniti
   app.user = {};
   app.components = {};
   app.assignments = {};
-  app.test = 'hello';
   app.viewCompleted = true;
   
   app.loading = true;
