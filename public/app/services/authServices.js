@@ -11,7 +11,7 @@ angular.module('authServices', [])
   };
 
   authFactory.isLoggedIn = function() {
-    if(AuthToken.getToken()) {
+    if(AuthToken.getToken() && AuthToken.getToken() != null) {
       return true;
     }
     else {
