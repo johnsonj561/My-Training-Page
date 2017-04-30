@@ -29,6 +29,9 @@
   <!-- GPA Pie Chart -->
   <div>
     <div id="chart-container" class="gpa-pie-chart"></div>
+    <div class="pie-legend text-center">
+      <span id="a">A</span><span id="b">B</span><span id="c">C</span><span id="d">D</span><span id="f">F</span><span id="incomplete">Incomplete</span>
+    </div>
     <table class="table table-bordered">
       <tr>
         <th class="text-center">Total Assignments</th>
@@ -54,6 +57,7 @@
       <strong>Assigned Training</strong>
     </div>
     <!-- Start: Table -->
+   
     <table class="table">
       <tr>
         <th>Name</th>
@@ -64,14 +68,16 @@
       <tr ng-repeat="module in report.assignments">
         <td>{{ module.name }}</td>
         <td class="desktop-only">{{ module.description }}</td>
-        <td class="summary-score" ng-class="{'text-success': module.score >= 90, 'text-primary': module.score < 90, 
+        <td ng-show="module.score > -1" class="summary-score" ng-class="{'text-success': module.score >= 90, 'text-primary': module.score < 90, 
                                             'text-warning': module.score < 80,
                                             'text-danger': module.score < 70 }">
           {{ module.score }}</td>
-        <td><span class="assign-training" ng-click="report.displayModuleStats($index);">
+        <td ng-show="module.score < 0">Not Complete</td>
+        <td ng-show="module.score > -1"><span class="assign-training" ng-click="report.displayModuleStats($index);">
           <a>View More</a>
           </span>
         </td>
+        <td ng-show="module.score < 0"><a class="btn btn-default btn-sm" ng-href="/train/{{module._id}}">Start</a></td>
       </tr>
       <!-- End: Table -->
     </table>
