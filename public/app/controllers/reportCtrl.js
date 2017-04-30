@@ -132,7 +132,6 @@ angular.module('reportController', ['trainingServices'])
       id: 'chart-container',
       data: data,
       options: {
-        labels: labels,
         tooltips: labels,
         colors: colors,
         strokestyle: 'white',
