@@ -1,95 +1,94 @@
 <!-- Header -->
 <div class="page-header">
-  <h1 class="text-center">Assign Training</h1>
+	<h1 class="text-center">Assign Training</h1>
 </div>
 <!-- Header -->
 
 <!-- Loading Icon -->
 <div class="jumbotron text-center" ng-show="assign.loading">
-  <span class="glyphicon glyphicon-repeat spinner"></span>
-  <p>Loading....</p>
+	<span class="glyphicon glyphicon-repeat spinner"></span>
+	<p>Loading....</p>
 </div>
 
 <!-- Custom Success Message -->
 <div class="row show-hide-message" ng-show="assign.successMsg">
-  <div class="alert alert-success">{{ assign.successMsg }}</div>
+	<div class="alert alert-success">{{ assign.successMsg }}</div>
 </div>
 <!-- Custom Success Message -->
 
 <!-- Custom Error Message -->
 <div class="row show-hide-message" ng-show="assign.errorMsg">
-  <div class="alert alert-danger">{{ assign.errorMsg }}</div>
+	<div class="alert alert-danger">{{ assign.errorMsg }}</div>
 </div>
 <!-- Custom Error Message -->
 
 
 <!-- Simple Search Bar -->
 <div ng-hide="assign.loading || assign.successMsg || assign.errorMsg" class="navbar-form search-filter">
-  <label>Search Filter</label>
-  <div class="form-group">
-    <!-- Search Input -->
-    <input type="text" class="form-control" name="search" placeholder="search for..." ng-model="assign.searchKeyword">
-  </div>
-  <!-- Search Button -->
-  <button type="button" ng-click="assign.search(assign.searchKeyword);" class="btn btn-default">Search</button>
-  <!-- Clear Button -->
-  <button type="button" ng-click="assign.clear();" class="btn btn-default">Clear</button>
-  <!-- Submit Assignment Button -->
-  <button type="button" ng-disabled="assign.submitDisabled" ng-show="assign.moduleSelected" ng-click="assign.submitAssignment();" 
-          class="btn btn-success pull-right">Submit Assignments</button>
+	<label>Search Filter</label>
+	<div class="form-group">
+		<!-- Search Input -->
+		<input type="text" class="form-control" name="search" placeholder="search for..." ng-model="assign.searchKeyword">
+	</div>
+	<!-- Search Button -->
+	<button type="button" ng-click="assign.search(assign.searchKeyword);" class="btn btn-default">Search</button>
+	<!-- Clear Button -->
+	<button type="button" ng-click="assign.clear();" class="btn btn-default">Clear</button>
+	<!-- Submit Assignment Button -->
+	<button type="button" ng-disabled="assign.submitDisabled" ng-show="assign.moduleSelected" ng-click="assign.submitAssignment();" class="btn btn-success pull-right">Submit Assignments</button>
 </div>
 <!-- Simple Search Bar /-->
 
 
 <!-- Available Training Modules -->
 <div class="panel panel-primary">
-  <!-- Heading -->
-  <div class="panel-heading">
-    <strong>Select A Training Module</strong>
-  </div>
+	<!-- Heading -->
+	<div class="panel-heading">
+		<strong>Select A Training Module</strong>
+	</div>
 
-  <!-- TRAINING MODULE TABLE -->
-  <table class="table assign-training-table" ng-show="!assign.moduleSelected">
-    <tr>
-      <th>Title</th>
-      <th>Creator</th>
-      <th>Last Edit</th>
-      <th class="desktop-only">Description</th>
-      <th>Select</th>
-    </tr>
-    <!-- NG REPEAT FOR ALL TRAINING MODULES -->
-    <tr ng-repeat="module in assign.modules | filter: assign.searchFilter">
-      <td>{{ module.name }}</td>
-      <td>{{ module.author[0].name }}</td>
-      <td>{{ module.lastEdit }}</td>
-      <td class="desktop-only">{{ module.description }}</td>
-      <td><span class="assign-training" ng-click="assign.selectModule($index)">
+	<!-- TRAINING MODULE TABLE -->
+	<table class="table assign-training-table" ng-show="!assign.moduleSelected">
+		<tr>
+			<th>Title</th>
+			<th>Creator</th>
+			<th class="desktop-only">Last Edit</th>
+			<th class="desktop-only">Description</th>
+			<th>Select</th>
+		</tr>
+		<!-- NG REPEAT FOR ALL TRAINING MODULES -->
+		<tr ng-repeat="module in assign.modules | filter: assign.searchFilter">
+			<td>{{ module.name }}</td>
+			<td>{{ module.author[0].name }}</td>
+			<td class="desktop-only">{{ module.lastEdit }}</td>
+			<td class="desktop-only">{{ module.description }}</td>
+			<td><span class="assign-training" ng-click="assign.selectModule($index)">
         <a>Select <i class="fa fa-share fa-2x" aria-hidden="true"></i></a>
         </span>
-      </td>
-    </tr>    
-    <!-- End: Table -->
-  </table>
+			</td>
+		</tr>
+		<!-- End: Table -->
+	</table>
 
 
-  <!-- USERS TABLE -->
-  <table class="table assign-training-table" ng-show="assign.moduleSelected">
-    <tr>
-      <th>Name</th>
-      <th class="desktop-only">Username</th>
-      <th>Email</th>
-      <th>Select</th>
-    </tr>
-    <!-- NG REPEAT FOR ALL USERS -->
-    <tr ng-repeat="user in assign.users | filter: assign.searchFilter">
-      <td>{{ user.name }}</td>
-      <td class="desktop-only">{{ user.username }}</td>
-      <td>{{ user.email }}</td>
-      <td> <label><input type="checkbox" name="assign.selectedUsers[]" value="{{user._id}}" ng-checked="assign.selection.indexOf(user._id) > -1"
+	<!-- USERS TABLE -->
+	<table class="table assign-training-table" ng-show="assign.moduleSelected">
+		<tr>
+			<th>Name</th>
+			<th class="desktop-only">Username</th>
+			<th>Email</th>
+			<th>Select</th>
+		</tr>
+		<!-- NG REPEAT FOR ALL USERS -->
+		<tr ng-repeat="user in assign.users | filter: assign.searchFilter">
+			<td>{{ user.name }}</td>
+			<td class="desktop-only">{{ user.username }}</td>
+			<td>{{ user.email }}</td>
+			<td> <label><input type="checkbox" name="assign.selectedUsers[]" value="{{user._id}}" ng-checked="assign.selection.indexOf(user._id) > -1"
                          ng-click="assign.toggleUserSelection(user._id)"></label></td>
-    </tr>    
-    <!-- End: Table -->
-  </table>
+		</tr>
+		<!-- End: Table -->
+	</table>
 
 
 </div>
