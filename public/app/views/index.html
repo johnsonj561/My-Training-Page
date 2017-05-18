@@ -1,134 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <base href="/">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="My Training Page allows employers to quickly and effectively train their employees">
-    <meta name="author" content="KB Software Solutions">
+<head>
+	<base href="/">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="My Training Page allows employers to quickly and effectively train their employees">
+	<meta name="author" content="KB Software Solutions">
 
-    <!-- Cascade Style Sheets -->
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" 
-          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="assets/css/animate.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<!-- Cascade Style Sheets -->
+	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="assets/css/animate.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.min.css">
 
-    <!-- Main Angular Files -->
-    <script src="assets/js/angular/angular.min.js"></script>
-    <script src="assets/js/angular-route.js"></script>
-    <script src="assets/js/angular-sanitize/angular-sanitize.js"></script>
-    <script src="assets/js/angular-animate.js"></script>
+	<!-- Main Angular Files -->
+	<script src="assets/js/angular/angular.min.js"></script>
+	<script src="assets/js/angular-route.min.js"></script>
+	<script src="assets/js/angular-sanitize/angular-sanitize.min.js"></script>
+	<script src="assets/js/angular-animate.min.js"></script>
 
-    <!-- Angular Config/Routes -->
-    <script src="app/app.js"></script>
-    <script src="app/routes.js"></script>
+	<!-- Angular Config/Routes -->
+	<script src="app/app.js"></script>
+	<script src="app/routes.js"></script>
 
-    <!-- Angular Controllers -->
-    <script src="app/controllers/userCtrl.js"></script>
-    <script src="app/controllers/mainCtrl.js"></script>
-    <script src="app/controllers/emailCtrl.js"></script>
-    <script src="app/controllers/managementCtrl.js"></script>
-    <script src="app/controllers/menuCtrl.js"></script>
-    <script src="app/controllers/trainCtrl.js"></script>
-    <script src="app/controllers/reportCtrl.js"></script>
+	<!-- Angular Controllers -->
+	<script src="app/controllers/userCtrl.js"></script>
+	<script src="app/controllers/mainCtrl.js"></script>
+	<script src="app/controllers/emailCtrl.js"></script>
+	<script src="app/controllers/managementCtrl.js"></script>
+	<script src="app/controllers/menuCtrl.js"></script>
+	<script src="app/controllers/trainCtrl.js"></script>
+	<script src="app/controllers/reportCtrl.js"></script>
 
-    <!-- Angular Services -->
-    <script src="app/services/userServices.js"></script>
-    <script src="app/services/authServices.js"></script>
-    <script src="app/services/trainingServices.js"></script>
+	<!-- Angular Services -->
+	<script src="app/services/userServices.js"></script>
+	<script src="app/services/authServices.js"></script>
+	<script src="app/services/trainingServices.js"></script>
 
-    <title>My Training Page</title>
-  </head>
+	<title>My Training Page</title>
+</head>
 
-  <body ng-app="userApp" ng-controller="mainCtrl as main" ng-show="main.loadme" ng-cloak>
+<body ng-app="userApp" ng-controller="mainCtrl as main" ng-show="main.loadme" ng-cloak>
 
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" 
-                  id="btn-nav-toggle" data-target="#bs-example-navbar-collapse-1">
+	<!-- Fixed navbar -->
+	<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" id="btn-nav-toggle" data-target="#bs-example-navbar-collapse-1">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span> 
             <span class="icon-bar"></span>
           </button>
-          <!-- Navbar Logo -->
-          <a class="navbar-brand desktop-logo" href="/"> 
-            <img src="assets/img/my-training-page-logo-500x85.jpg" alt="My Training Page Desktop Logo"> 
-          </a>
-          <a class="navbar-brand mobile-logo" href="/"> 
-            <img src="assets/img/my-training-page-logo-300x50.jpg" alt="My Training Page Mobile Logo"> 
-          </a>
-          <a class="navbar-brand mobile-logo-mini" href="/"> 
-            <img src="assets/img/my-training-page-logo-260x35.jpg" alt="My Training Page Mini Mobile Logo"> 
-          </a>
-        </div>
-      </div>
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a class="nav-link" ng-show="!main.isLoggedIn" href="/register">Register</a></li>
-          <li><a class="nav-link" ng-show="main.isLoggedIn" href="/menu">Menu</a></li>
-          <li><a class="nav-link" ng-show="!main.isLoggedIn" href="/">Login</a></li>
-          <li><a class="nav-link" ng-show="main.isLoggedIn" href="/logout" ng-click="main.endSession()" >Sign Out</a></li>
-        </ul>
-      </div>
-    </nav>
+				<!-- Navbar Logo -->
+				<a class="navbar-brand desktop-logo" href="/">
+					<img src="assets/img/my-training-page-logo-500x85.jpg" alt="My Training Page Desktop Logo">
+				</a>
+				<a class="navbar-brand mobile-logo" href="/">
+					<img src="assets/img/my-training-page-logo-300x50.jpg" alt="My Training Page Mobile Logo">
+				</a>
+				<a class="navbar-brand mobile-logo-mini" href="/">
+					<img src="assets/img/my-training-page-logo-260x35.jpg" alt="My Training Page Mini Mobile Logo">
+				</a>
+			</div>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a class="nav-link" ng-show="!main.isLoggedIn" href="/register">Register</a></li>
+				<li><a class="nav-link" ng-show="main.isLoggedIn" href="/menu">Menu</a></li>
+				<li><a class="nav-link" ng-show="!main.isLoggedIn" href="/">Login</a></li>
+				<li><a class="nav-link" ng-show="main.isLoggedIn" href="/logout" ng-click="main.endSession()">Sign Out</a></li>
+			</ul>
+		</div>
+	</nav>
 
 
-    <div class="container">
+	<div class="container">
 
-      <!-- angular view -->
-      <div ng-view></div>
+		<!-- angular view -->
+		<div ng-view></div>
 
-      <!-- BootstrapJS Modal -->
-      <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog">
+		<!-- BootstrapJS Modal -->
+		<div class="modal fade" id="myModal" role="dialog">
+			<div class="modal-dialog">
 
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button ng-hide="main.hideButton" ng-show="main.showCloseButton" type="button" ng-click="main.endSession();" class="close" data-dismiss="modal">&times;</button>
-              <!-- Modal Header -->
-              <h4 class="modal-title">{{ main.modalHeader }}</h4>
-            </div>
-            <!-- Modal Body -->
-            <div class="modal-body">
-              <p>{{ main.modalBody }}</p>
-              <div ng-show="main.hideButton" class="dizzy-gillespie"></div>
-            </div>
-            <div class="modal-footer">
-              <!-- Modal 'Yes' & 'No' Buttons -->
-              <button type="button" ng-hide="main.hideButton" ng-click="main.renewSession();" class="btn btn-primary" data-dismiss="modal">Yes</button>
-              <button type="button" ng-hide="main.hideButton" ng-click="main.endSession();" class="btn btn-danger" data-dismiss="modal">No</button>
-            </div>
-          </div>
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button ng-hide="main.hideButton" ng-show="main.showCloseButton" type="button" ng-click="main.endSession();" class="close" data-dismiss="modal">&times;</button>
+						<!-- Modal Header -->
+						<h4 class="modal-title">{{ main.modalHeader }}</h4>
+					</div>
+					<!-- Modal Body -->
+					<div class="modal-body">
+						<p>{{ main.modalBody }}</p>
+						<div ng-show="main.hideButton" class="dizzy-gillespie"></div>
+					</div>
+					<div class="modal-footer">
+						<!-- Modal 'Yes' & 'No' Buttons -->
+						<button type="button" ng-hide="main.hideButton" ng-click="main.renewSession();" class="btn btn-primary" data-dismiss="modal">Yes</button>
+						<button type="button" ng-hide="main.hideButton" ng-click="main.endSession();" class="btn btn-danger" data-dismiss="modal">No</button>
+					</div>
+				</div>
 
-        </div>
-      </div>
-      <!-- BootstrapJS Modal -->
+			</div>
+		</div>
+		<!-- BootstrapJS Modal -->
 
-    </div>
+	</div>
 
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="assets/js/jquery-3.1.1.js"></script>
-    <script src="assets/js/bootstrap.js"></script>
-    <!-- RGraph Utilities -->
-    <script src="assets/js/RGraph/RGraph/RGraph.svg.common.core.js"></script>
-    <script src="assets/js/RGraph/RGraph/RGraph.svg.common.tooltips.js"></script>
-    <script src="assets/js/RGraph/RGraph/RGraph.svg.pie.js"></script>
-    <script src="assets/js/RGraph/RGraph/RGraph.svg.hbar.js"></script>
-    <!-- jquery to de-activate the navbar-toggle after a link has been --> 
-    <script>
-      $(".nav-link").on("click", function() {
-        if($("#btn-nav-toggle").attr("aria-expanded") == "true"){
-          $("#btn-nav-toggle").trigger("click");
-        }
-      });
-    </script>
-  </body>
+	<!-- Bootstrap core JavaScript -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="assets/js/jquery-3.1.1.js"></script>
+	<script src="assets/js/bootstrap.js"></script>
+	<!-- RGraph Utilities -->
+	<script src="assets/js/RGraph/RGraph/RGraph.svg.common.core.js"></script>
+	<script src="assets/js/RGraph/RGraph/RGraph.svg.common.tooltips.js"></script>
+	<script src="assets/js/RGraph/RGraph/RGraph.svg.pie.js"></script>
+	<script src="assets/js/RGraph/RGraph/RGraph.svg.hbar.js"></script>
+	<!-- jquery to de-activate the navbar-toggle after a link has been -->
+	<script>
+		$(".nav-link").on("click", function() {
+			if ($("#btn-nav-toggle").attr("aria-expanded") == "true") {
+				$("#btn-nav-toggle").trigger("click");
+			}
+		});
+
+	</script>
+</body>
+
 </html>
