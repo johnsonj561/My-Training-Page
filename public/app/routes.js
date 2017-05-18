@@ -10,7 +10,6 @@ var app = angular.module('appRoutes', ['ngRoute'])
 
   })
 
-
   // Register Route            
   .when('/register', {
     templateUrl: 'app/views/pages/users/register.html',
@@ -219,7 +218,8 @@ app.run(['$rootScope', 'Auth', '$location', 'User', function($rootScope, Auth, $
           });
         }
       }
-
+      // this line does not make sense - it looks like the same statement above
+      // equiv of next.$$route.authenticated == true
       else if(!next.$$route.authenticated == false) {
         if(Auth.isLoggedIn()) {
           event.preventDefault();
