@@ -31,7 +31,7 @@ app.use(morgan('dev'));
  */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-	extended: true
+  extended: true
 }));
 
 /*
@@ -43,14 +43,14 @@ app.use(express.static(__dirname + '/public'));
 
 // force redirecto to http://www.
 app.use(function (req, res, next) {
-	console.log(req.headers.host);
-	console.log(req.url);
-	// 52\.89\.200\.83.*
-	if (req.headers.host.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,4}/i)) {
-		console.log('regex match');
-		res.redirect(301, 'http://' + process.env.HOST + ':3000' + req.url);
-	}
-	next();
+  console.log(req.headers.host);
+  console.log(req.url);
+  // 52\.89\.200\.83.*
+  if (req.headers.host.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,4}/i)) {
+    console.log('regex match');
+    res.redirect(301, process.env.HOST + req.url);
+  }
+  next();
 });
 
 
@@ -67,24 +67,24 @@ app.use('/api', appRoutes);
  */
 var uri = process.env.DB_HOST;
 var options = {
-	user: process.env.DB_USER,
-	pass: process.env.DB_PASS
+  user: process.env.DB_USER,
+  pass: process.env.DB_PASS
 }
 mongoose.connect(uri, options, function (err) {
-	if (err) {
-		console.log("Not connected to the database: " + err);
-	} else {
-		console.log("Successfully connected to MongoDB");
-	}
+  if (err) {
+    console.log("Not connected to the database: " + err);
+  } else {
+    console.log("Successfully connected to MongoDB");
+  }
 });
 
 
 app.get('*', function (req, res) {
-	res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
+  res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 });
 
 
 
 app.listen(port, function () {
-	console.log("Running on " + port);
+  console.log("Running on " + port);
 });
