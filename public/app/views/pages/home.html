@@ -1,81 +1,72 @@
 <div class="row">
-  <div class="col-md-4"></div>
-  <!-- Login Frame -->
-  <div class="col-md-4">
-    <!-- Registration Form -->
-    <div class="login-form">
-      <form ng-submit="main.doLogin(loginData);" ng-hide="main.isLoggedIn">
-        <!-- Username -->
-        <label>Username:</label>
-        <input class="form-control" type="text" name="username" placeholder="login to begin..." ng-model="main.loginData.username">
-        <br>
-        <!-- Password -->
-        <label>Password:</label>
-        <input class="form-control" type="password" name="password" ng-model="main.loginData.password">
-        <br>
-        <!-- Submit/Register Button -->
-        <div class="login-button-div text-center">
-          <button class="btn btn-primary login-btn" type="submit">Login To Start</button>
-          <!-- Resetting User Credentials -->
-          <div class="reset">
-            <label><a href="/resetpassword">Forgot Password</a></label>&nbsp;|&nbsp;
-            <label><a href="/resetusername">Forgot Username</a></label>
-          </div>
-          <hr class="style-eight">
+	<div class="col-md-4"></div>
+	<!-- Login Frame -->
+	<div class="col-md-4">
+		<!-- Registration Form -->
+		<div class="login-form">
+			<form ng-submit="main.doLogin(loginData);" ng-hide="main.isLoggedIn">
+				<!-- Username -->
+				<label>Username:</label>
+				<input class="form-control" type="text" name="username" placeholder="login to begin..." ng-model="main.loginData.username" autofocus>
+				<br>
+				<!-- Password -->
+				<label>Password:</label>
+				<input class="form-control" type="password" name="password" ng-model="main.loginData.password">
+				<br>
+				<!-- Submit/Register Button -->
+				<div class="login-button-div text-center">
+					<button class="btn btn-primary login-btn" type="submit">Login To Start</button>
+					<!-- Resetting User Credentials -->
+					<div class="reset">
+						<label><a href="/resetpassword">Forgot Password</a></label>&nbsp;|&nbsp;
+						<label><a href="/resetusername">Forgot Username</a></label>
+					</div>
+					<!-- Divider -->
+					<hr class="style-eight">
 
-          <button type="button" class="btn btn-primary facebook-login-btn" ng-click="main.facebook();">
+					<button type="button" class="btn btn-primary facebook-login-btn" ng-click="main.facebook();">
             Login With Facebook <i class="fa fa-facebook" aria-hidden="true"></i></button>&nbsp;
-          <!-- <button type="button" class="btn btn-primary google-login-btn" ng-click="main.google();">
+					<!-- <button type="button" class="btn btn-primary google-login-btn" ng-click="main.google();">
             Login With Google <i class="fa fa-google" aria-hidden="true"></i></button> -->
-        </div>
-      </form>
+				</div>
+			</form>
 
-      <!-- Show logout view if currently logged in -->
-      <div ng-show="main.isLoggedIn">
-        <div class="login-button-div text-center">
-          <label>Logged In As {{ main.username }}</label>
-          <a href="/logout" ng-click="main.logout()"><button class="btn btn-primary login-btn" >Click To Logout</button></a>
-        </div>
-      </div>
+			<!-- Show logout view if currently logged in -->
+			<div ng-show="main.isLoggedIn">
+				<div class="login-button-div text-center">
+					<label>Logged In As {{ main.username }}</label>
+					<a href="/logout" ng-click="main.logout()"><button class="btn btn-primary login-btn" >Click To Logout</button></a>
+				</div>
+			</div>
 
-      <!-- USER FEEDBACK -->
-      <!-- Loading Icon -->
-      <div class="jumbotron loading-div text-center" ng-show="main.loading">
-        <span class="glyphicon glyphicon-repeat spinner"></span>
-        <p>Loading....</p>
-      </div>
-      <!-- Failed Login Message -->
-      <div class="row show-hide-message" ng-show="main.errorMsg">
-        <div class="alert alert-danger text-center">{{ main.errorMsg }}<br>
-          <a href="/resend" ng-show="main.expired"><strong class="red-text">Resend Activation Link</strong></a>
-        </div>
-      </div>
-      <!-- Successful Login Message -->
-      <div class="row show-hide-message" ng-show="main.successMsg">
-        <div class="alert alert-success text-center">{{ main.successMsg }}</div>
-      </div>
-      <!-- Failed Facebook Login Message -->
-      <div class="row show-hide-message" ng-show="facebook.errorMsg">
-        <div class="alert alert-danger text-center">{{ facebook.errorMsg }}<br>
-          <a href="/resend" ng-show="facebook.expired"><strong class="red-text">Resend Activation Link</strong></a>
-        </div>
-      </div>
-      <!-- Successful Facebook Login Message -->
-      <div class="row show-hide-message" ng-show="facebook.successMsg">
-        <div class="alert alert-success text-center">{{ facebook.successMsg }}</div>
-      </div>
-      <!-- Failed Google Login Message -->
-      <div class="row show-hide-message" ng-show="google.errorMsg">
-        <div class="alert alert-danger text-center">{{ google.errorMsg }}<br>
-          <a href="/resend" ng-show="google.expired"><strong class="red-text">Resend Activation Link</strong></a>
-        </div>
-      </div>
-      <!-- Successful Google Login Message -->
-      <div class="row show-hide-message" ng-show="google.successMsg">
-        <div class="alert alert-success text-center">{{ google.successMsg }}</div>
-      </div>
-    </div>
-    <!-- Login Form End-->
-  </div>
-  <div class="col-md-4"></div>
+			<!-- USER FEEDBACK -->
+			<!-- Loading Icon -->
+			<div class="jumbotron loading-div text-center" ng-show="main.loading">
+				<span class="glyphicon glyphicon-repeat spinner"></span>
+				<p>Loading....</p>
+			</div>
+			<!-- Failed Login Message -->
+			<div class="row show-hide-message" ng-show="main.errorMsg">
+				<div class="alert alert-danger text-center">{{ main.errorMsg }}<br>
+					<a href="/resend" ng-show="main.expired"><strong class="red-text">Resend Activation Link</strong></a>
+				</div>
+			</div>
+			<!-- Successful Login Message -->
+			<div class="row show-hide-message" ng-show="main.successMsg">
+				<div class="alert alert-success text-center">{{ main.successMsg }}</div>
+			</div>
+			<!-- Failed Facebook Login Message -->
+			<div class="row show-hide-message" ng-show="facebook.errorMsg">
+				<div class="alert alert-danger text-center">{{ facebook.errorMsg }}<br>
+					<a href="/resend" ng-show="facebook.expired"><strong class="red-text">Resend Activation Link</strong></a>
+				</div>
+			</div>
+			<!-- Successful Facebook Login Message -->
+			<div class="row show-hide-message" ng-show="facebook.successMsg">
+				<div class="alert alert-success text-center">{{ facebook.successMsg }}</div>
+			</div>
+		</div>
+		<!-- Login Form End-->
+	</div>
+	<div class="col-md-4"></div>
 </div>
