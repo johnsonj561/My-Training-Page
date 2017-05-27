@@ -1,11 +1,9 @@
 <div class="page-header text-center">
 	<h1>Create New User</h1>
 </div>
-
 <!-- Registration Form -->
 <div class="login-form">
 	<form class="regForm" name="regForm" ng-submit="register.regUser(regData, regForm.$valid);" novalidate>
-
 		<!-- Name -->
 		<div ng-class="{'has-success':(regForm.name.$valid && !regForm.name.$pristine), 'has-error':(!regForm.name.$valid && 
                    !regForm.name.$pristine) || (!regForm.name.$valid && regForm.$submitted)}">
@@ -21,8 +19,6 @@
 				<li>Must be atleast 3 characters, and no more than 20</li>
 			</ul>
 		</div>
-
-
 		<!-- Email -->
 		<div ng-class="{'has-success':(regForm.email.$valid && !regForm.email.$pristine && !register.emailInvalid), 
                    'has-error':(!regForm.email.$valid && !regForm.email.$pristine) ||
@@ -101,25 +97,19 @@
 	</form>
 </div>
 <!-- Registration Form -->
-
-
 <!-- Loading Icon -->
 <div class="jumbotron text-center" ng-show="register.loading">
 	<span class="glyphicon glyphicon-repeat spinner"></span>
 	<p>Loading....</p>
 </div>
 <!-- Loading Icon -->
-
 <br>
-
 <!-- Successful Registration Message -->
 <div class="row show-hide-message" ng-show="register.successMsg">
 	<div class="alert alert-success">{{ register.successMsg }}</div>
 </div>
 <!-- Successful Registration Message -->
-
 <br>
-
 <!-- Failed Registration Message -->
 <div class="row show-hide-message" ng-show="register.errorMsg">
 	<div class="alert alert-danger">{{ register.errorMsg }}</div>
