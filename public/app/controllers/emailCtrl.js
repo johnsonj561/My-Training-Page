@@ -1,7 +1,7 @@
 angular.module('emailController', ['userServices'])
 
 	// Controller: emailCtrl is used to activate the user's account    
-	.controller('emailCtrl', function($routeParams, User, $timeout, $location) {
+	.controller('emailCtrl', function ($routeParams, User, $timeout, $location) {
 
 		app = this;
 
@@ -84,15 +84,12 @@ angular.module('emailController', ['userServices'])
 
 	// Controller: passwordCtrl is used to send a password reset link to the user
 	.controller('passwordCtrl', function (User) {
-
 		app = this;
-
 		// Function to send reset link to e-mail associated with username
 		app.sendPassword = function (resetData, valid) {
 			app.errorMsg = false; // Clear errorMsg
 			app.loading = true; // Start loading icon
 			app.disabled = true; // Disable form while processing
-
 			// Check if form is valid
 			if (valid) {
 				// Runs function to send reset link to e-mail associated with username
