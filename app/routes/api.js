@@ -603,8 +603,8 @@ module.exports = function (router, dotenv) {
 							from: 'My Training Page Staff, staff@mytrainingpage.com',
 							to: user.email,
 							subject: 'My Training Page Reset Password',
-							text: 'Hello ' + user.name + ', This e-mail is to notify you that your password was recently reset at mytrainingpage.com',
-							html: 'Hello<strong> ' + user.name + '</strong>,<br><br>This e-mail is to notify you that your password was recently reset at mytrainingpage.com'
+							text: 'Hello ' + user.name + ', This e-mail is to notify you that your password was recently reset at http://www.mytrainingpage.com',
+							html: 'Hello<strong> ' + user.name + '</strong>,<br><br>This e-mail is to notify you that your password was recently reset at  http://www.mytrainingpage.com'
 						};
 						// Function to send e-mail to the user
 						client.sendMail(email, function (err, info) {
